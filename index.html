@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payments &amp; Invoicing Flow</title>
+<meta name="description" content="Case study: a web form that cut payment recording from 5 minutes to under 1, updating the course sheet, the bank sheet and an invoice queue at once, for a non-technical sales and finance team. Portfolio project by José Cabral Ferraro.">
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --border: rgba(11, 11, 11, 0.10);
+    --accent: #2a78d6;
+    --accent-wash: rgba(42, 120, 214, 0.08);
+    --flash: rgba(42, 120, 214, 0.22);
+    --before: #d03b3b;
+    --after: #006300;
+    --pending: #a35a00;
+    --pending-wash: rgba(196, 120, 0, 0.10);
+    --cell: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d;
+      --surface: #1a1a19;
+      --ink: #ffffff;
+      --ink-2: #c3c2b7;
+      --muted: #898781;
+      --grid: #2c2c2a;
+      --border: rgba(255, 255, 255, 0.10);
+      --accent: #3987e5;
+      --accent-wash: rgba(57, 135, 229, 0.12);
+      --flash: rgba(57, 135, 229, 0.30);
+      --before: #e66767;
+      --after: #0ca30c;
+      --pending: #e09a3a;
+      --pending-wash: rgba(224, 154, 58, 0.12);
+      --cell: #141413;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --border: rgba(255, 255, 255, 0.10);
+    --accent: #3987e5;
+    --accent-wash: rgba(57, 135, 229, 0.12);
+    --flash: rgba(57, 135, 229, 0.30);
+    --before: #e66767;
+    --after: #0ca30c;
+    --pending: #e09a3a;
+    --pending-wash: rgba(224, 154, 58, 0.12);
+    --cell: #141413;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 40px 16px 56px; }
+  a { color: var(--accent); }
+
+  header { margin-bottom: 28px; }
+  .eyebrow { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+  .tag { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--ink-2); background: var(--surface); margin-left: 6px; }
+  h1 { font-size: clamp(26px, 4.5vw, 36px); line-height: 1.15; margin: 0 0 12px; font-weight: 650; max-width: 780px; }
+  .lede { margin: 0 0 12px; color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .byline { font-size: 14px; color: var(--ink-2); margin: 0; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
+  section { margin: 36px 0 0; }
+  h2 { font-size: 21px; margin: 0 0 6px; font-weight: 620; }
+  .sub { color: var(--ink-2); margin: 0 0 16px; max-width: 720px; }
+
+  /* KPI row */
+  .kpis { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 12px; }
+  .kpi-label { font-size: 13px; color: var(--ink-2); margin: 0 0 4px; }
+  .kpi-value { font-size: 30px; font-weight: 620; line-height: 1.1; margin: 0; font-variant-numeric: tabular-nums; }
+  .kpi-note { font-size: 13px; color: var(--muted); margin: 6px 0 0; }
+  .hero .kpi-value { font-size: 54px; }
+
+  /* Problem / constraints */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .two h3, .label-caps { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); margin: 0 0 8px; font-weight: 600; }
+  ul.clean { margin: 0; padding-left: 20px; }
+  ul.clean li { margin-bottom: 6px; }
+
+  /* Flow */
+  .flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 32px; counter-reset: step; }
+  .flow li { position: relative; counter-increment: step; }
+  .flow li .card { height: 100%; padding: 16px 18px; }
+  .flow li .card::before {
+    content: counter(step);
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent-wash); color: var(--accent);
+    font-size: 13px; font-weight: 650; margin-bottom: 8px;
+  }
+  .flow strong { display: block; margin-bottom: 4px; }
+  .flow p { margin: 0; font-size: 14px; color: var(--ink-2); }
+  .flow li:not(:last-child)::after {
+    content: "→"; position: absolute; right: -24px; top: 50%; transform: translateY(-50%);
+    color: var(--muted); font-size: 18px;
+  }
+  .flow li:nth-child(3)::after { content: none; }
+  .flow-note { font-size: 14px; color: var(--ink-2); margin: 14px 0 0; }
+  code { font: 13px/1.4 ui-monospace, "Cascadia Mono", Consolas, monospace; background: var(--accent-wash); padding: 1px 5px; border-radius: 4px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  th { color: var(--ink-2); font-weight: 600; font-size: 13px; }
+  .facts td:first-child { font-weight: 600; width: 28%; }
+  .before { color: var(--before); }
+  .after { color: var(--after); }
+  .table-wrap { overflow-x: auto; }
+
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .steps .card { padding: 16px; }
+  .steps .big { font-size: 28px; font-weight: 620; line-height: 1.1; margin: 0 0 6px; font-variant-numeric: tabular-nums; }
+  .steps p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+  .skills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .skills li { font-size: 14px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); }
+
+  details { margin-top: 12px; }
+  summary { cursor: pointer; color: var(--accent); font-size: 15px; }
+  details ul { margin: 10px 0 0; padding-left: 20px; color: var(--ink-2); font-size: 15px; }
+  details li { margin-bottom: 4px; }
+
+  .demo-tag { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--accent-wash); color: var(--accent); font-weight: 600; }
+  .hint { font-size: 13px; color: var(--muted); margin: 0; }
+  .muted { color: var(--muted); }
+
+  /* One cell, three moments */
+  .cells { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 12px; align-items: center; }
+  .cells .arrow { color: var(--muted); font-size: 20px; text-align: center; }
+  .moment p { margin: 0; }
+  .moment .when { font-size: 13px; color: var(--ink-2); margin-bottom: 6px; font-weight: 600; }
+  .moment .why { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .xl {
+    font: 14px/1.3 Calibri, "Segoe UI", Arial, sans-serif; background: var(--cell); color: var(--ink);
+    border: 1px solid var(--grid); padding: 0; border-radius: 4px; overflow: hidden;
+  }
+  .xl-head { display: flex; font-size: 11px; color: var(--muted); background: var(--accent-wash); border-bottom: 1px solid var(--grid); }
+  .xl-head span { padding: 2px 8px; border-right: 1px solid var(--grid); }
+  .xl-body { padding: 8px 10px; min-height: 38px; display: flex; align-items: center; gap: 6px; position: relative; }
+  .xl-body.selected { outline: 2px solid var(--after); outline-offset: -2px; }
+  .note-corner { position: absolute; top: 0; right: 0; width: 0; height: 0; border-top: 8px solid var(--before); border-left: 8px solid transparent; }
+
+  /* Demo */
+  .demo-bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .btn {
+    font: inherit; font-size: 13px; color: var(--accent); background: none;
+    border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; cursor: pointer; white-space: nowrap;
+  }
+  .btn:hover { background: var(--accent-wash); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 14px; align-items: end; }
+  .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .field label { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+  .field select, .field input, .qcard input {
+    font: inherit; font-size: 14px; color: var(--ink); background: var(--page);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; width: 100%; min-width: 0;
+  }
+  .field select:focus, .field input:focus, .qcard input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .field.wide { grid-column: span 2; }
+  .form-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .form-actions .btn { padding: 8px 16px; font-size: 14px; }
+  .msg { font-size: 14px; margin: 12px 0 0; min-height: 22px; }
+  .msg.err { color: var(--before); }
+  .msg.ok { color: var(--after); }
+  .profile { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
+  .profile strong { color: var(--ink); }
+
+  .sheets { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin-top: 18px; }
+  .sheet { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--cell); min-width: 0; }
+  .sheet.span { grid-column: 1 / -1; }
+  .sheet-title { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; padding: 8px 12px; background: var(--accent-wash); border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 650; }
+  .sheet-title span { font-weight: 400; color: var(--ink-2); font-size: 12px; }
+  .sheet table { font-size: 13px; }
+  .sheet th, .sheet td { padding: 6px 8px; white-space: nowrap; }
+  .sheet th { font-size: 12px; }
+  .sheet td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .chip { display: inline-block; font-size: 12px; padding: 1px 7px; border-radius: 4px; }
+  .chip.pend { background: var(--pending-wash); color: var(--pending); }
+  .chip.inv { color: var(--after); font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 12px; padding: 1px 0; }
+  .empty { color: var(--muted); }
+  .flash { animation: flash 1.8s ease-out; }
+  @keyframes flash { 0%, 35% { background: var(--flash); } 100% { background: transparent; } }
+
+  .queue { padding: 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .qcard { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 13px; background: var(--surface); }
+  .qcard p { margin: 0 0 3px; }
+  .qcard .qhead { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 6px; color: var(--ink-2); }
+  .qcard .qname { font-size: 15px; font-weight: 650; color: var(--ink); }
+  .qcard .qamt { font-size: 18px; font-weight: 620; font-variant-numeric: tabular-nums; margin: 6px 0 2px; }
+  .qcard .qrow { display: flex; gap: 8px; margin-top: 10px; }
+  .qcard .qrow input { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; padding: 6px 8px; }
+  .qcard .qerr { color: var(--before); font-size: 12px; margin: 6px 0 0; min-height: 0; }
+  .qcard .qnote { margin-top: 8px; padding: 6px 8px; border-radius: 6px; background: var(--pending-wash); color: var(--ink); }
+  .callout-box { margin-top: 20px; border-left: 4px solid var(--accent); }
+  .callout-box p:last-child { margin: 0; font-size: 15px; }
+  .feats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+  .feats .card { padding: 16px; }
+  .feats strong { display: block; margin-bottom: 4px; }
+  .feats p { margin: 0; font-size: 14px; color: var(--ink-2); }
+  .qempty { padding: 18px; text-align: center; color: var(--muted); font-size: 14px; }
+
+  footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--grid); font-size: 14px; color: var(--ink-2); }
+  footer p { margin: 0 0 6px; }
+
+  @media (max-width: 820px) {
+    .kpis { grid-template-columns: 1fr 1fr; }
+    .kpis .hero { grid-column: 1 / -1; }
+    .two { grid-template-columns: 1fr; }
+    .flow { grid-template-columns: 1fr; gap: 26px; }
+    .flow li::after, .flow li:nth-child(3)::after {
+      content: "↓"; right: auto; left: 50%; top: auto; bottom: -24px; transform: translateX(-50%);
+    }
+    .flow li:last-child::after { content: none; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .cells { grid-template-columns: 1fr; }
+    .cells .arrow { transform: rotate(90deg); }
+    .form { grid-template-columns: 1fr 1fr; }
+    .sheets { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .steps { grid-template-columns: 1fr; }
+    .form { grid-template-columns: 1fr; }
+    .field.wide { grid-column: auto; }
+    .hero .kpi-value { font-size: 44px; }
+    .card { padding: 16px; }
+  }
+
+  @media print {
+    :root { color-scheme: light; }
+    body { background: #fff; font-size: 12.5px; }
+    .wrap { max-width: none; padding: 0; }
+    section { margin-top: 18px; break-inside: avoid; }
+    .card { border-color: #ccc; }
+    details, #demo { display: none !important; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <p class="eyebrow">Case study · Process &amp; Systems <span class="tag">Real project · client data protected</span></p>
+    <h1>Recording a course payment went from 5&nbsp;minutes to under&nbsp;1</h1>
+    <p class="lede">A consulting firm that also sells specialized training courses, mostly for lawyers, tracked every payment by hand: checking the bank, typing a note into each course spreadsheet, and keeping no list of invoices still to issue. I built a web form that records each payment once and updates the course sheet, the bank sheet and an “invoices to issue” queue at the same time. The team still works in the same spreadsheets, and can still edit them by hand.</p>
+    <p class="byline">José Cabral Ferraro · Process &amp; Systems Specialist · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
+  </header>
+
+  <div class="kpis">
+    <div class="card hero">
+      <p class="kpi-label">Time to record a payment</p>
+      <p class="kpi-value">&lt; 1 min</p>
+      <p class="kpi-note">down from 4–5 minutes of cross-checking the bank and several spreadsheets</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Payments recorded</p>
+      <p class="kpi-value">150+</p>
+      <p class="kpi-note">in the first 10 days of use</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Courses covered</p>
+      <p class="kpi-value">6</p>
+      <p class="kpi-note">every course currently running</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Daily users</p>
+      <p class="kpi-value">3</p>
+      <p class="kpi-note">non-technical staff, at $0 extra software cost</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>The problem</h2>
+    <p class="sub">The firm has trained 5,000+ professionals in 190+ courses over 11 years. At that volume, tracking payments by hand doesn’t scale.</p>
+    <div class="two">
+      <div class="card">
+        <h3>What was going wrong</h3>
+        <ul class="clean">
+          <li>Each payment took <strong>4–5 minutes</strong> of cross-checking the bank statement against several spreadsheets, and ended up as a free-text note in a cell.</li>
+          <li>Prices are not the same for everyone: new participants pay full price, returning participants pay another, and on top of that come special promotions, personal discounts and group discounts on request. Every payment had to be checked against its own deal, which is a big part of why it took so long.</li>
+          <li>Every course lives in its own spreadsheet, with 1 to 4 installments and slightly different layouts.</li>
+          <li>Typos, a transfer assigned twice or to the wrong person, and payments whose invoice was never issued, because there was no list of what was still pending.</li>
+          <li>When the invoice was finally issued, its number was typed over the note, so the payment details were lost.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What the owner asked for</h3>
+        <ul class="clean">
+          <li><strong>Change our routine as little as possible.</strong> Same spreadsheets, same way of reading them.</li>
+          <li><strong>Everything must stay editable by hand</strong>, so every promotion and special deal can still be handled.</li>
+          <li><strong>The person who invoices shouldn’t see participant and installment details</strong>, only what they need to issue the invoice.</li>
+          <li><strong>No new software costs.</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How it works now</h2>
+    <p class="sub">One form replaces the cross-checking. Invoices are still written by hand, as before, but nothing gets forgotten.</p>
+    <ol class="flow">
+      <li><div class="card"><strong>Record the payment</strong><p>Pick course, participant and installment, then the bank transfer from a list of incoming transfers not yet assigned.</p></div></li>
+      <li><div class="card"><strong>Course sheet updated</strong><p>The installment cell now reads “Paid – invoice pending”. The payment details are kept as a cell note.</p></div></li>
+      <li><div class="card"><strong>Bank sheet updated</strong><p>The transfer is tagged with the course and the participant, so it can’t be used again.</p></div></li>
+      <li><div class="card"><strong>Queued for invoicing</strong><p>A card with everything the invoice needs. Who to invoice (name or company, and tax ID) comes straight from the enrollment form.</p></div></li>
+      <li><div class="card"><strong>Invoice written</strong><p>By hand, in the pre-printed invoice booklet, exactly as before. Amount, VAT and amount in words are ready to copy.</p></div></li>
+      <li><div class="card"><strong>Number entered once</strong><p>It replaces “pending” in the course sheet, fills the bank’s invoice column and leaves the queue.</p></div></li>
+    </ol>
+    <div class="card callout-box">
+      <p class="label-caps">Invoicing in Paraguay, in short</p>
+      <p>Every sale needs a legal invoice. This firm uses pre-printed invoice booklets authorized by the tax authority, and every invoice has its own number (e.g. <code>001-001-0000123</code>). Each invoice carries the tax ID (RUC) of whoever pays, the participant or sometimes their law firm, which they later use to file their own taxes. That’s why the system takes the invoicing details from their own field in the enrollment form.</p>
+    </div>
+    <p class="flow-note">Recording payments and issuing invoices are two separate, password-protected screens built from the same code, so each person sees only their part. It also handles cash, deposits, partial payments, one invoice covering several payments, and someone paying for someone else.</p>
+  </section>
+
+  <section>
+    <h2>A deliberate choice: a simple core, editable edges</h2>
+    <p class="sub">The two common prices are easy to automate. Promotions, personal discounts and group deals change all the time, and building a rule for each one would have made the system hard to use and hard to maintain.</p>
+    <div class="two">
+      <div class="card">
+        <h3>What the system automates</h3>
+        <ul class="clean">
+          <li>The everyday path: one payment, one transfer, one invoice.</li>
+          <li>The two common prices: <strong>new participant</strong> (full price) and <strong>returning participant</strong>. The participant’s profile shows which one applies.</li>
+          <li>Matching each payment to the bank and keeping the three sheets in sync.</li>
+          <li>The checks that stop costly mistakes, like a transfer used twice.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What stays in people’s hands</h3>
+        <ul class="clean">
+          <li>Special cases go under an <strong>“Other”</strong> category, with a comment that the rest of the team sees, including whoever issues the invoice.</li>
+          <li>Special prices, discounts and group deals: adjusted in the sheet as always.</li>
+          <li>Any cell can be fixed by hand, and the system keeps the other sheets in sync.</li>
+          <li>Rare cases, like cancelling a payment or a credit note, on purpose.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="flow-note">The result: a system that is simple to use, simple to build and maintain, and fits naturally into the work the sales and finance team was already doing.</p>
+  </section>
+
+  <section>
+    <h2>Designed to meet people at their level</h2>
+    <p class="sub">Nobody had to learn a new tool. The form speaks the team’s language and only asks for what it needs.</p>
+    <div class="feats">
+      <div class="card"><strong>Pick, don’t type</strong><p>Course, participant, installment and bank transfer are chosen from lists.</p></div>
+      <div class="card"><strong>Search like a person</strong><p>By name or ID number, with or without accents, in any word order.</p></div>
+      <div class="card"><strong>Plain-language messages</strong><p>Every error says what happened and what to do next.</p></div>
+      <div class="card"><strong>Phone or computer</strong><p>Works on both, without needing access to the bank sheet.</p></div>
+      <div class="card"><strong>Only your part</strong><p>Payments and invoicing each have their own screen.</p></div>
+    </div>
+  </section>
+
+  <section id="demo">
+    <h2>Try a simplified version</h2>
+    <p class="sub">A small copy of the system with made-up participants. Record a payment and watch the three sheets change at once, then enter an invoice number. Try a mistake too: an amount larger than the transfer, or an invoice number already used. Or choose “Other” to leave a comment for the team.</p>
+    <div class="card">
+      <div class="demo-bar">
+        <p class="label-caps" style="margin:0">Record a payment</p>
+        <span style="display:inline-flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn" id="reset" type="button">↺ Reset demo</button>
+          <span class="demo-tag">Fictional data generated with AI</span>
+        </span>
+      </div>
+      <div class="form">
+        <div class="field wide"><label for="f-prog">Course</label><select id="f-prog"></select></div>
+        <div class="field"><label for="f-stu">Participant</label><select id="f-stu"></select></div>
+        <div class="field"><label for="f-inst">Installment</label><select id="f-inst"></select></div>
+        <div class="field"><label for="f-type">Payment type</label>
+          <select id="f-type"><option value="transfer">Bank transfer</option><option value="cash">Cash</option><option value="other">Other (special case)</option></select></div>
+        <div class="field wide" id="f-note-wrap" style="display:none"><label for="f-note">Comment for the team</label><input id="f-note" placeholder="e.g. Group discount, 3 lawyers from the same firm" autocomplete="off"></div>
+        <div class="field wide" id="f-ref-wrap"><label for="f-ref">Bank transfer <span class="muted" style="font-weight:400">(only unassigned ones)</span></label><select id="f-ref"></select></div>
+        <div class="field"><label for="f-amt">Amount (Gs)</label><input id="f-amt" inputmode="numeric" autocomplete="off"></div>
+        <div class="field wide form-actions"><button class="btn primary" id="save" type="button">Save payment</button></div>
+      </div>
+      <p class="profile" id="profile"></p>
+      <p class="msg" id="msg" aria-live="polite"></p>
+
+      <div class="sheets">
+        <div class="sheet">
+          <div class="sheet-title">Course sheet <span id="prog-name"></span></div>
+          <div class="table-wrap"><table><thead id="prog-head"></thead><tbody id="prog-body"></tbody></table></div>
+        </div>
+        <div class="sheet">
+          <div class="sheet-title">Bank sheet <span>incoming transfers</span></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Date</th><th>Ref.</th><th style="text-align:right">Amount</th><th>Course</th><th>Participant</th><th>Invoice</th></tr></thead>
+            <tbody id="bank-body"></tbody></table></div>
+        </div>
+        <div class="sheet span">
+          <div class="sheet-title">Invoices to issue <span id="queue-count"></span></div>
+          <div class="queue" id="queue"></div>
+        </div>
+      </div>
+      <p class="hint" style="margin-top:12px">Amounts in Paraguayan guaraníes (Gs). The real system covers 6 courses and 150+ payments so far.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>One cell, before and after</h2>
+    <p class="sub">The team still reads the same cell in the same spreadsheet. What changed is what’s in it, and what happens around it.</p>
+    <div class="card">
+      <div class="cells">
+        <div class="moment">
+          <p class="when">Before</p>
+          <div class="xl"><div class="xl-head"><span>F7</span><span>Installment 2</span></div><div class="xl-body">Transfer · 300,000 · 22 Sep</div></div>
+          <p class="why">A free-text note typed by hand after checking the bank. Later overwritten by the invoice number.</p>
+        </div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="moment">
+          <p class="when">After the payment is recorded</p>
+          <div class="xl"><div class="xl-head"><span>F7</span><span>Installment 2</span></div><div class="xl-body"><span class="chip pend">Paid – invoice pending</span><span class="note-corner" title="Cell note"></span></div></div>
+          <p class="why">Payment details kept in a cell note. Bank tagged, invoice queued.</p>
+        </div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="moment">
+          <p class="when">After the invoice is issued</p>
+          <div class="xl"><div class="xl-head"><span>F7</span><span>Installment 2</span></div><div class="xl-body selected"><span class="chip inv">001-001-0000123</span><span class="note-corner" title="Cell note"></span></div></div>
+          <p class="why">Same number written in the bank sheet. Removed from the queue.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mistakes it prevents</h2>
+    <p class="sub">The screen guides the user, but every check is repeated on the server, so a mistake can’t slip through even if someone skips the screen.</p>
+    <div class="card table-wrap">
+      <table class="facts">
+        <thead><tr><th>Mistake</th><th>How the system stops it</th></tr></thead>
+        <tbody>
+          <tr><td>Same transfer used twice</td><td>Once assigned, a transfer disappears from the list. The server checks again before saving.</td></tr>
+          <tr><td>Wrong amount</td><td>The amount can’t be larger than the bank transfer, and the participant’s profile shows what is still pending.</td></tr>
+          <tr><td>Payment never invoiced</td><td>Every payment lands in “Invoices to issue”, sorted by date, until its number is entered.</td></tr>
+          <tr><td>Invoice to the wrong name or tax ID</td><td>Invoicing details come from the enrollment form, not retyped.</td></tr>
+          <tr><td>Two people saving at once</td><td>A lock lets one save at a time. If the installment changed meanwhile, it warns instead of overwriting.</td></tr>
+          <tr><td>Invoice number mistyped or reused</td><td>Format is checked, and a number already used for another participant is rejected. Fixing it in the sheet fixes it everywhere.</td></tr>
+          <tr><td>Rows inserted, deleted or sorted</td><td>Each payment has its own ID. Rows are found by that ID and the participant’s ID number, never by row position.</td></tr>
+          <tr><td>Columns moved or layouts differ</td><td>Columns are found by their header name, so each course sheet can keep its own layout.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>How I tested it</h2>
+    <p class="sub">Always on temporary copies of the bank, the queue and a course sheet. The real spreadsheets were never touched during testing.</p>
+    <div class="steps">
+      <div class="card"><p class="big">26/26</p><p>automated tests passing, running the real code on copies</p></div>
+      <div class="card"><p class="big">2</p><p>real bugs found by the tests and fixed before launch</p></div>
+      <div class="card"><p class="big">~10</p><p>edge cases found in two review rounds, e.g. a previous participant’s amount left in the form</p></div>
+      <div class="card"><p class="big">0</p><p>real spreadsheets touched while testing</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Before and after</h2>
+    <div class="card table-wrap">
+      <table class="facts">
+        <thead><tr><th></th><th>Before</th><th>After</th></tr></thead>
+        <tbody>
+          <tr><td>Recording a payment</td><td class="before">4–5 min cross-checking the bank and several sheets</td><td class="after">Under 1 min, one form; three sheets update at once</td></tr>
+          <tr><td>Which invoices are missing?</td><td class="before">No list, relied on memory</td><td class="after">A queue sorted by date</td></tr>
+          <tr><td>Who to invoice</td><td class="before">Looked up in the enrollment list</td><td class="after">Taken from the enrollment form automatically</td></tr>
+          <tr><td>Invoice data (VAT, amount in words)</td><td class="before">Worked out by hand</td><td class="after">Ready on each card</td></tr>
+          <tr><td>Payment details</td><td class="before">Overwritten by the invoice number</td><td class="after">Kept, linked to bank and invoice</td></tr>
+          <tr><td>Editing by hand</td><td>Possible</td><td class="after">Still possible, and kept in sync</td></tr>
+          <tr><td>Cost</td><td>—</td><td class="after">$0 in software</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>What I did</h2>
+    <p class="sub">End to end: from mapping the old process with the team to a tool they use every day.</p>
+    <ul class="skills">
+      <li>Process mapping with users</li>
+      <li>Requirements from a non-technical owner</li>
+      <li>Financial data validation &amp; reconciliation</li>
+      <li>User-friendly design</li>
+      <li>Google Apps Script / JavaScript</li>
+      <li>Google Sheets as a database</li>
+      <li>Automated testing</li>
+      <li>Access control</li>
+      <li>Iterating with real users</li>
+    </ul>
+    <details>
+      <summary>Technical details</summary>
+      <ul>
+        <li>Backend in Google Apps Script (JavaScript V8): about 1,000 lines and 49 functions. Frontend in plain HTML/CSS/JavaScript, no libraries, responsive.</li>
+        <li>Google Sheets is the database, because the team already works there and the owner needed to keep editing by hand.</li>
+        <li>An installable trigger watches manual edits (invoice number, “done”, amount, date) and keeps the course and bank sheets in sync.</li>
+        <li>LockService prevents simultaneous saves. CacheService handles sessions.</li>
+        <li>Password per screen (payments, invoices or both), 6-hour sessions, a 15-minute lockout after 5 failed attempts, and every server function checks the session.</li>
+        <li>Developed locally with clasp and git (28 commits over two weeks).</li>
+      </ul>
+    </details>
+  </section>
+
+  <footer>
+    <p>This is a real project at my current job. Our participants trust us with their personal and financial information, so no real names, ID numbers, amounts or screenshots of the real system are shown here. All names, ID numbers and amounts in the demo are fictional, generated with AI. Numbers are rounded.</p>
+    <p>Another project for the same team: <a href="https://josecabfe.github.io/storm-proof-records/">From storm-damaged paper to records found in seconds →</a></p>
+    <p>José Cabral Ferraro · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
+  </footer>
+
+</main>
+<script>
+(function () {
+  // ---------- Demo data (fictional) ----------
+  var PROGRAMS = {
+    XL: { name: "New Labor Law: Practical Implications", short: "Labor Law", n: 3, price: { "new": 300000, ret: 250000 } },
+    PB: { name: "Data Protection Law for Legal Practice", short: "Data Protection", n: 2, price: { "new": 450000, ret: 400000 } }
+  };
+  var TYPE = { "new": "New participant", ret: "Returning participant" };
+  // bill = invoicing details from the enrollment form (usually the participant, sometimes their law firm)
+  var START = {
+    students: [
+      { p: "XL", no: 1, t: "new", name: "Ana Torres", id: "4.218.390", bill: ["Ana Torres", "4218390-5"], inst: [{ inv: "001-001-0000118" }, { pend: "TRF-5512" }, null] },
+      { p: "XL", no: 2, t: "new", name: "Bruno Medina", id: "5.067.112", bill: ["Bruno Medina", "5067112-8"], inst: [{ inv: "001-001-0000119" }, null, null] },
+      { p: "XL", no: 3, t: "new", name: "Camila Rojas", id: "3.991.457", bill: ["Camila Rojas", "3991457-2"], inst: [null, null, null] },
+      { p: "XL", no: 4, t: "ret", name: "Daniel Vera", id: "4.730.268", bill: ["Daniel Vera", "4730268-0"], inst: [{ inv: "001-001-0000120" }, { inv: "001-001-0000122" }, null] },
+      { p: "PB", no: 1, t: "new", name: "Elena Duarte", id: "5.302.845", bill: ["Elena Duarte", "5302845-1"], inst: [{ inv: "001-001-0000121" }, null] },
+      { p: "PB", no: 2, t: "ret", name: "Federico Sosa", id: "4.115.903", bill: ["Sosa & Partners Law Firm", "80045612-3"], inst: [null, null] },
+      { p: "PB", no: 3, t: "new", name: "Gabriela Núñez", id: "3.874.226", bill: ["Gabriela Núñez", "3874226-6"], inst: [{ pend: "TRF-5520" }, null] }
+    ],
+    bank: [
+      { date: "2026-09-22", ref: "TRF-5498", amt: 300000, who: "TORRES ANA", p: "XL", s: 0, inv: "001-001-0000118" },
+      { date: "2026-09-25", ref: "TRF-5512", amt: 300000, who: "TORRES ANA", p: "XL", s: 0, inv: "" },
+      { date: "2026-09-26", ref: "TRF-5520", amt: 450000, who: "NUNEZ GABRIELA", p: "PB", s: 6, inv: "" },
+      { date: "2026-09-29", ref: "TRF-5531", amt: 300000, who: "MEDINA BRUNO", p: "", s: -1, inv: "" },
+      { date: "2026-09-30", ref: "TRF-5537", amt: 400000, who: "SOSA &amp; PARTNERS", p: "", s: -1, inv: "" },
+      { date: "2026-10-01", ref: "TRF-5544", amt: 300000, who: "ROJAS CAMILA", p: "", s: -1, inv: "" },
+      { date: "2026-10-02", ref: "TRF-5549", amt: 150000, who: "VERA DANIEL", p: "", s: -1, inv: "" }
+    ],
+    queue: [
+      { s: 0, k: 1, ref: "TRF-5512", date: "2026-09-25", amt: 300000 },
+      { s: 6, k: 0, ref: "TRF-5520", date: "2026-09-26", amt: 450000 }
+    ]
+  };
+  var st, seq = 0, flashKeys = {};
+
+  var $ = function (id) { return document.getElementById(id); };
+  var fProg = $("f-prog"), fStu = $("f-stu"), fInst = $("f-inst"), fType = $("f-type"),
+      fRef = $("f-ref"), fRefWrap = $("f-ref-wrap"), fNote = $("f-note"), fNoteWrap = $("f-note-wrap"), fAmt = $("f-amt"), msg = $("msg");
+  function priceOf(s) { return PROGRAMS[s.p].price[s.t]; }
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function money(n) { return Number(n).toLocaleString("en-US"); }
+  function fmt(d) { var p = d.split("-"); return p[2] + "/" + p[1]; }
+  function today() { var t = new Date(); return t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0"); }
+  function vat(n) { return Math.floor(n / 11); }   // 10% VAT included, rounded down
+
+  var ONES = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+  var TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+  function under1000(n) {
+    var out = [];
+    if (n >= 100) { out.push(ONES[Math.floor(n / 100)] + " hundred"); n %= 100; }
+    if (n >= 20) { out.push(TENS[Math.floor(n / 10)] + (n % 10 ? "-" + ONES[n % 10] : "")); }
+    else if (n) out.push(ONES[n]);
+    return out.join(" ");
+  }
+  function words(n) {
+    if (!n) return "Zero";
+    var parts = [], m = Math.floor(n / 1e6), k = Math.floor(n / 1000) % 1000, r = n % 1000;
+    if (m) parts.push(under1000(m) + " million");
+    if (k) parts.push(under1000(k) + " thousand");
+    if (r) parts.push(under1000(r));
+    var s = parts.join(" ");
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function reset() {
+    st = JSON.parse(JSON.stringify(START));
+    flashKeys = {};
+    fProg.value = "XL";
+    fType.value = "transfer";
+    fillStudents(); msg.textContent = ""; msg.className = "msg";
+    renderAll();
+  }
+
+  // ---------- Form ----------
+  function fillProgs() {
+    fProg.innerHTML = Object.keys(PROGRAMS).map(function (k) { return '<option value="' + k + '">' + PROGRAMS[k].name + "</option>"; }).join("");
+  }
+  function fillStudents() {
+    var p = fProg.value;
+    fStu.innerHTML = st.students.map(function (s, i) { return s.p === p ? '<option value="' + i + '">' + s.no + ". " + esc(s.name) + "</option>" : ""; }).join("");
+    fillInst();
+  }
+  function fillInst() {
+    var s = st.students[+fStu.value], first = -1;
+    fInst.innerHTML = s.inst.map(function (c, k) {
+      var paid = !!c; if (!paid && first < 0) first = k;
+      return '<option value="' + k + '"' + (paid ? " disabled" : "") + ">Installment " + (k + 1) + (paid ? " (paid)" : "") + "</option>";
+    }).join("");
+    if (first >= 0) fInst.value = first;
+    fillRefs();
+    showProfile();
+  }
+  function fillRefs() {
+    var free = st.bank.map(function (b, i) { return b.s < 0 ? i : -1; }).filter(function (i) { return i >= 0; });
+    fRef.innerHTML = '<option value="">Choose a transfer…</option>' + free.map(function (i) {
+      var b = st.bank[i];
+      return '<option value="' + i + '">' + fmt(b.date) + " · " + b.ref + " · " + money(b.amt) + " · " + b.who + "</option>";
+    }).join("");
+    fRefWrap.style.display = fType.value === "transfer" ? "" : "none";
+    fNoteWrap.style.display = fType.value === "other" ? "" : "none";
+    setAmount();
+  }
+  function setAmount() {
+    var s = st.students[+fStu.value], open = s.inst.some(function (c) { return !c; });
+    fAmt.value = open ? money(priceOf(s)) : "";
+    $("save").disabled = !open;
+  }
+  function showProfile() {
+    var s = st.students[+fStu.value], pr = PROGRAMS[s.p], price = priceOf(s);
+    var pending = s.inst.filter(function (c) { return !c; }).length;
+    $("profile").innerHTML = "<strong>" + esc(s.name) + "</strong> · ID " + s.id + " · " + TYPE[s.t] + " price: " + pr.n + " × " + money(price) +
+      " · " + (pending ? "<span class=\"before\">" + pending + " still to pay (" + money(pending * price) + ")</span>" : '<span class="after">fully paid</span>') +
+      " · Invoice to: " + esc(s.bill[0]);
+  }
+
+  function save() {
+    var si = +fStu.value, s = st.students[si], k = +fInst.value, price = priceOf(s);
+    var amt = parseInt(String(fAmt.value).replace(/\D/g, ""), 10) || 0, type = fType.value, transfer = type === "transfer", bi = fRef.value === "" ? -1 : +fRef.value;
+    var note = fNote.value.trim();
+    msg.className = "msg err";
+    if (s.inst[k]) { msg.textContent = "That installment is already paid. Pick another one."; return; }
+    if (transfer && bi < 0) { msg.textContent = "Choose which bank transfer this payment came from."; fRef.focus(); return; }
+    if (type === "other" && !note) { msg.textContent = "Special cases need a comment, so the team knows what was agreed."; fNote.focus(); return; }
+    if (amt <= 0) { msg.textContent = "Enter the amount paid."; fAmt.focus(); return; }
+    if (amt > price) { msg.textContent = "The amount is higher than the " + TYPE[s.t].toLowerCase() + " price (" + money(price) + ")."; fAmt.focus(); return; }
+    if (transfer && amt > st.bank[bi].amt) {
+      msg.textContent = "The amount is higher than the bank transfer (" + money(st.bank[bi].amt) + "). Check the participant or the transfer.";
+      fAmt.focus(); return;
+    }
+    var ref = transfer ? st.bank[bi].ref : (type === "cash" ? "CASH-" : "OTHER-") + (++seq);
+    s.inst[k] = { pend: ref };
+    flashKeys = {}; flashKeys["c" + si + "-" + k] = 1;
+    if (transfer) { var b = st.bank[bi]; b.p = s.p; b.s = si; flashKeys["b" + bi] = 1; }
+    st.queue.push({ s: si, k: k, ref: ref, date: transfer ? st.bank[bi].date : today(), amt: amt, note: type === "other" ? note : "" });
+    flashKeys["q" + ref] = 1;
+    fNote.value = "";
+    msg.className = "msg ok";
+    msg.textContent = transfer ? "Saved. Course sheet, bank sheet and invoice queue updated at once."
+      : type === "cash" ? "Saved. Course sheet and invoice queue updated (cash isn’t in the bank)."
+      : "Saved. Course sheet and invoice queue updated. The comment travels with the payment to the invoice queue.";
+    fillInst();
+    renderAll();
+  }
+
+  // ---------- Sheets ----------
+  function cell(c) {
+    if (!c) return '<span class="empty">—</span>';
+    if (c.pend) return '<span class="chip pend">Paid – invoice pending</span>';
+    return '<span class="chip inv">' + c.inv + "</span>";
+  }
+  function fl(key) { return flashKeys[key] ? ' class="flash"' : ""; }
+
+  function renderProgram() {
+    var p = fProg.value, pr = PROGRAMS[p], h = "<tr><th>No.</th><th>Participant</th><th>ID</th><th>Type</th>";
+    for (var k = 0; k < pr.n; k++) h += "<th>Inst. " + (k + 1) + "</th>";
+    $("prog-head").innerHTML = h + "</tr>";
+    $("prog-name").textContent = pr.name;
+    $("prog-body").innerHTML = st.students.map(function (s, i) {
+      if (s.p !== p) return "";
+      return "<tr><td>" + s.no + "</td><td>" + esc(s.name) + "</td><td>" + s.id + "</td><td>" + (s.t === "ret" ? "Returning" : "New") + "</td>" +
+        s.inst.map(function (c, k) { return "<td" + fl("c" + i + "-" + k) + ">" + cell(c) + "</td>"; }).join("") + "</tr>";
+    }).join("");
+  }
+  function renderBank() {
+    $("bank-body").innerHTML = st.bank.map(function (b, i) {
+      var f = flashKeys["b" + i] ? ' class="flash"' : "";
+      return "<tr" + f + "><td>" + fmt(b.date) + "</td><td>" + b.ref + '</td><td class="num">' + money(b.amt) + "</td><td>" +
+        (b.p ? PROGRAMS[b.p].short : '<span class="empty">—</span>') + "</td><td>" +
+        (b.s >= 0 ? esc(st.students[b.s].name) : '<span class="empty">' + b.who + "</span>") + "</td><td>" +
+        (b.inv ? '<span class="chip inv">' + b.inv + "</span>" : '<span class="empty">—</span>') + "</td></tr>";
+    }).join("");
+  }
+  function renderQueue() {
+    st.queue.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    $("queue-count").textContent = st.queue.length ? st.queue.length + " pending · sorted by payment date" : "all invoiced";
+    $("queue").innerHTML = st.queue.length ? st.queue.map(function (q, i) {
+      var s = st.students[q.s], pr = PROGRAMS[s.p];
+      return '<div class="qcard' + (flashKeys["q" + q.ref] ? " flash" : "") + '">' +
+        '<div class="qhead"><span>' + fmt(q.date) + "/" + q.date.slice(0, 4) + "</span><span>" + (q.ref.indexOf("CASH") === 0 ? "Cash" : q.ref.indexOf("OTHER") === 0 ? "Other" : q.ref) + "</span></div>" +
+        '<p class="label-caps" style="font-size:11px;margin:0 0 2px">Invoice to · from the enrollment form</p>' +
+        '<p class="qname">' + esc(s.bill[0]) + "</p><p>RUC (tax ID) " + s.bill[1] + "</p>" +
+        (s.bill[0] !== s.name ? '<p class="muted">Participant: ' + esc(s.name) + "</p>" : "") +
+        "<p>" + pr.name + " – installment " + (q.k + 1) + " of " + pr.n + "</p>" +
+        '<p class="qamt">Gs ' + money(q.amt) + "</p>" +
+        '<p class="muted">VAT 10% included: ' + money(vat(q.amt)) + "</p>" +
+        '<p class="muted">' + words(q.amt) + " guaraníes</p>" +
+        (q.note ? '<p class="qnote">💬 ' + esc(q.note) + "</p>" : "") +
+        '<div class="qrow"><input data-q="' + i + '" placeholder="001-001-0000123" aria-label="Invoice number for ' + esc(s.name) + '"><button class="btn primary" data-done="' + i + '" type="button">Done</button></div>' +
+        '<p class="qerr" id="qerr' + i + '"></p></div>';
+    }).join("") : '<div class="qempty">Nothing left to invoice. Every payment has its invoice number.</div>';
+  }
+  function renderAll() { renderProgram(); renderBank(); renderQueue(); }
+
+  function invoiceOwner(no) {
+    for (var i = 0; i < st.students.length; i++) {
+      var s = st.students[i];
+      for (var k = 0; k < s.inst.length; k++) if (s.inst[k] && s.inst[k].inv === no) return i;
+    }
+    return -1;
+  }
+  function done(i) {
+    var q = st.queue[i], input = document.querySelector('input[data-q="' + i + '"]'), err = $("qerr" + i);
+    var no = input.value.trim();
+    if (/^\d{1,3}-\d{1,3}-\d{1,7}$/.test(no)) {   // accept 1-1-123 and pad it
+      var p = no.split("-"); no = p[0].padStart(3, "0") + "-" + p[1].padStart(3, "0") + "-" + p[2].padStart(7, "0");
+    }
+    if (!/^\d{3}-\d{3}-\d{7}$/.test(no)) { err.textContent = "Invoice numbers look like 001-001-0000123."; input.focus(); return; }
+    var owner = invoiceOwner(no);
+    if (owner >= 0 && owner !== q.s) { err.textContent = "Invoice " + no + " is already used for " + st.students[owner].name + "."; input.focus(); return; }
+    st.students[q.s].inst[q.k] = { inv: no };
+    flashKeys = {}; flashKeys["c" + q.s + "-" + q.k] = 1;
+    st.bank.forEach(function (b, bi) { if (b.ref === q.ref) { b.inv = no; flashKeys["b" + bi] = 1; } });
+    st.queue.splice(i, 1);
+    if (fProg.value !== st.students[q.s].p) { fProg.value = st.students[q.s].p; fillStudents(); }
+    msg.className = "msg ok";
+    msg.textContent = "Invoice " + no + " written in the course sheet and the bank sheet, and removed from the queue.";
+    renderAll();
+  }
+
+  // ---------- Events ----------
+  fProg.addEventListener("change", function () { flashKeys = {}; fillStudents(); renderProgram(); msg.textContent = ""; });
+  fStu.addEventListener("change", function () { fillInst(); msg.textContent = ""; });
+  fInst.addEventListener("change", function () { setAmount(); });
+  fType.addEventListener("change", fillRefs);
+  fRef.addEventListener("change", function () {
+    var b = st.bank[+fRef.value];
+    if (b) fAmt.value = money(Math.min(b.amt, priceOf(st.students[+fStu.value])));
+  });
+  $("save").addEventListener("click", save);
+  $("reset").addEventListener("click", reset);
+  $("queue").addEventListener("click", function (e) { var b = e.target.closest("[data-done]"); if (b) done(+b.dataset.done); });
+  $("queue").addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.dataset.q) done(+e.target.dataset.q); });
+
+  fillProgs();
+  reset();
+})();
+</script>
+</body>
+</html>
