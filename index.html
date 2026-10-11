@@ -237,34 +237,67 @@
     .band { padding: 24px 0; }
     #demo, details { display: none !important; }
   }
+
+  /* ---------- Language switch (EN / ES) ---------- */
+  html[lang="es"] .i-en, html:not([lang="es"]) .i-es { display: none !important; }
+  .lang-switch {
+    position: fixed; top: 14px; right: 16px; z-index: 10;
+    display: flex; align-items: center; gap: 2px; padding: 4px 6px;
+    background: rgba(255, 255, 255, 0.82); backdrop-filter: saturate(180%) blur(12px); -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-radius: 980px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    font-size: 13px; color: var(--faint);
+  }
+  .lang-switch button {
+    font: inherit; font-weight: 600; letter-spacing: 0.02em; color: var(--muted); background: none; border: 0;
+    padding: 4px 8px; border-radius: 980px; cursor: pointer;
+  }
+  .lang-switch button[aria-pressed="true"] { color: var(--blue-deep); }
+  .lang-switch button:hover { background: var(--blue-wash); }
+  @media print { .lang-switch { display: none; } }
 </style>
 </head>
 <body>
+<div class="lang-switch" role="group" aria-label="Language">
+  <button type="button" data-setlang="en">EN</button><span aria-hidden="true">|</span><button type="button" data-setlang="es">ES</button>
+</div>
 <main>
 
   <section class="band center">
     <div class="inner">
-      <p class="eyebrow">Case study · Process &amp; Systems · Real project, client data protected</p>
-      <h1><span class="l1">How I optimized a payment process</span><span class="l2">from 5&nbsp;minutes to under&nbsp;1.</span></h1>
-      <p class="lede">A consulting firm that also sells specialized training courses, mostly for lawyers, tracked every payment by hand. I built a web form that <strong>records each payment once and updates the course sheet, the bank sheet and an invoice queue at the same time</strong>, while the team keeps working in the same spreadsheets.</p>
-      <p class="byline">José Cabral Ferraro · Process &amp; Systems Specialist · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
-      <div class="stats">
-        <div class="stat"><p class="n">&lt;1 min</p><p class="l">per payment, <strong>down&nbsp;from&nbsp;4–5</strong></p></div>
-        <div class="stat"><p class="n">150+</p><p class="l">payments recorded in the first 10 days</p></div>
+      <p class="eyebrow"><span class="i-en">Case study · Process &amp; Systems · Real project, client data protected</span><span class="i-es">Caso de estudio · Procesos y Sistemas · Proyecto real, datos de clientes protegidos</span></p>
+      <h1 class="i-en"><span class="l1">How I optimized a payment process</span><span class="l2">from 5&nbsp;minutes to under&nbsp;1.</span></h1>
+      <h1 class="i-es"><span class="l1">Cómo optimicé un proceso de pagos</span><span class="l2">de 5&nbsp;minutos a menos de&nbsp;1.</span></h1>
+      <p class="lede i-en">A consulting firm that also sells specialized training courses, mostly for lawyers, tracked every payment by hand. I built a web form that <strong>records each payment once and updates the course sheet, the bank sheet and an invoice queue at the same time</strong>, while the team keeps working in the same spreadsheets.</p>
+      <p class="lede i-es">Una consultora que además vende cursos de capacitación especializados, sobre todo para abogados, registraba cada pago a mano. Desarrollé un formulario web que <strong>registra cada pago una sola vez y actualiza a la vez la planilla del curso, la del banco y una cola de facturas</strong>, mientras el equipo sigue trabajando en las mismas planillas.</p>
+      <p class="byline">José Cabral Ferraro · <span class="i-en">Process &amp; Systems Specialist</span><span class="i-es">Especialista en Procesos y Sistemas</span> · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
+      <div class="stats i-en">
+        <div class="stat"><p class="n">&lt;1 min</p><p class="l">per payment, <strong style="white-space:nowrap">down from 4–5</strong></p></div>
+        <div class="stat"><p class="n">150+</p><p class="l">payments in the first 10 days; <strong>now fully part of the team’s daily workflow</strong></p></div>
         <div class="stat"><p class="n">3</p><p class="l">non-technical staff use it every day</p></div>
         <div class="stat"><p class="n">$0</p><p class="l">extra software cost, built on Google Workspace</p></div>
+      </div>
+      <div class="stats i-es">
+        <div class="stat"><p class="n">&lt;1 min</p><p class="l">por pago, <strong style="white-space:nowrap">antes 4–5</strong></p></div>
+        <div class="stat"><p class="n">150+</p><p class="l">pagos en los primeros 10 días; <strong>hoy totalmente integrado al trabajo diario del equipo</strong></p></div>
+        <div class="stat"><p class="n">3</p><p class="l">personas no técnicas lo usan todos los días</p></div>
+        <div class="stat"><p class="n">$0</p><p class="l">de software extra, hecho sobre Google Workspace</p></div>
       </div>
     </div>
   </section>
 
   <section class="band alt">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>The problem.</h2>
         <p class="sub"><span class="q">“Why does recording one payment take 5 minutes, and still go wrong?”</span>The firm has trained <strong>5,000+ professionals in 190+ courses</strong> over 11 years. At that volume, tracking payments by hand doesn’t scale.</p>
       </div>
+      <div class="center i-es">
+        <h2>El problema.</h2>
+        <p class="sub"><span class="q">“¿Por qué registrar un pago lleva 5 minutos, y aun así sale mal?”</span>La firma capacitó a <strong>más de 5.000 profesionales en más de 190 cursos</strong> en 11 años. Con ese volumen, registrar los pagos a mano no escala.</p>
+      </div>
       <div class="grid2">
         <div class="tile">
+          <div class="i-en">
           <h3>What was going wrong</h3>
           <ul class="list">
             <li>Each payment took <strong>4–5 minutes</strong> of cross-checking the bank statement against several spreadsheets, and ended up as a free-text note in a cell.</li>
@@ -272,8 +305,19 @@
             <li>Every course lives in its own spreadsheet, with 1 to 4 installments and slightly different layouts.</li>
             <li>Typos, transfers assigned twice or to the wrong person, and invoices never issued, because nothing listed what was pending.</li>
           </ul>
+          </div>
+          <div class="i-es">
+          <h3>Qué fallaba</h3>
+          <ul class="list">
+            <li>Cada pago llevaba <strong>4–5 minutos</strong> de cruzar el extracto del banco con varias planillas, y terminaba como una nota escrita a mano en una celda.</li>
+            <li>Los precios varían: los alumnos nuevos pagan el precio completo, los que vuelven pagan otro, y además hay promociones, descuentos personales y descuentos por grupo. Cada pago había que verificarlo contra su propio acuerdo.</li>
+            <li>Cada curso tiene su propia planilla, con 1 a 4 cuotas y estructuras un poco distintas.</li>
+            <li>Errores de tipeo, transferencias asignadas dos veces o a la persona equivocada, y facturas que nunca se emitían, porque no había una lista de pendientes.</li>
+          </ul>
+          </div>
         </div>
         <div class="tile">
+          <div class="i-en">
           <h3>What the owner asked for</h3>
           <ul class="list">
             <li><strong>Change our routine as little as possible.</strong> Same spreadsheets, same way of reading them.</li>
@@ -281,6 +325,16 @@
             <li><strong>The person who invoices shouldn’t see participant details</strong>, only what the invoice needs.</li>
             <li><strong>No new software costs.</strong></li>
           </ul>
+          </div>
+          <div class="i-es">
+          <h3>Qué pidió la dueña</h3>
+          <ul class="list">
+            <li><strong>Cambiar lo mínimo nuestra forma de trabajar.</strong> Las mismas planillas, leídas de la misma manera.</li>
+            <li><strong>Todo tiene que seguir siendo editable a mano</strong>, para poder manejar cada promoción y acuerdo especial.</li>
+            <li><strong>Quien factura no tiene que ver los datos de los alumnos</strong>, solo lo que necesita la factura.</li>
+            <li><strong>Sin costos de software nuevos.</strong></li>
+          </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -288,11 +342,15 @@
 
   <section class="band">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>How it works <span class="accent">now.</span></h2>
         <p class="sub"><span class="q">“How do we record each payment once and never forget its invoice?”</span>One form replaces the cross-checking. Invoices are still written by hand, as before, <strong>but nothing gets forgotten.</strong></p>
       </div>
-      <ol class="steps6">
+      <div class="center i-es">
+        <h2>Cómo funciona <span class="accent">ahora.</span></h2>
+        <p class="sub"><span class="q">“¿Cómo registramos cada pago una sola vez y nunca olvidamos su factura?”</span>Un formulario reemplaza el cruce manual. Las facturas se siguen escribiendo a mano, como antes, <strong>pero no se olvida ninguna.</strong></p>
+      </div>
+      <ol class="steps6 i-en">
         <li><strong>Record the payment</strong><p>Pick course, participant and installment, then the bank transfer from a list of transfers not yet assigned.</p></li>
         <li><strong>Course sheet updated</strong><p>The installment cell reads “Paid – invoice pending”. Payment details are kept as a cell note.</p></li>
         <li><strong>Bank sheet updated</strong><p>The transfer is tagged with the course and the participant, so it can’t be used again.</p></li>
@@ -300,22 +358,42 @@
         <li><strong>Invoice written</strong><p>By hand, in the pre-printed booklet. Amount, VAT and amount in words are ready to copy.</p></li>
         <li><strong>Number entered once</strong><p>It replaces “pending” in the course sheet, fills the bank’s invoice column and leaves the queue.</p></li>
       </ol>
+      <ol class="steps6 i-es">
+        <li><strong>Se registra el pago</strong><p>Se elige curso, alumno y cuota, y la transferencia de una lista de transferencias todavía sin asignar.</p></li>
+        <li><strong>Se actualiza el curso</strong><p>La celda de la cuota dice “Pagado – factura pendiente”. El detalle del pago queda como nota de la celda.</p></li>
+        <li><strong>Se actualiza el banco</strong><p>La transferencia queda marcada con el curso y el alumno, así no se puede usar dos veces.</p></li>
+        <li><strong>Pasa a facturación</strong><p>A quién facturar (nombre o empresa, y RUC) sale directo del formulario de inscripción.</p></li>
+        <li><strong>Se escribe la factura</strong><p>A mano, en el talonario preimpreso. Monto, IVA y monto en letras están listos para copiar.</p></li>
+        <li><strong>Se carga el número una vez</strong><p>Reemplaza “pendiente” en el curso, completa la columna de factura del banco y sale de la cola.</p></li>
+      </ol>
       <div class="tile aside narrow">
+        <div class="i-en">
         <p class="k">Invoicing in Paraguay, in short</p>
         <p>Every sale needs a legal invoice. This firm uses pre-printed booklets authorized by the tax authority, and every invoice has its own number (e.g. <code>001-001-0000123</code>). Each invoice carries the tax ID (RUC) of whoever pays, the participant or sometimes their law firm, which they later use to file their own taxes. That’s why the system takes the invoicing details from their own field in the enrollment form.</p>
+        </div>
+        <div class="i-es">
+        <p class="k">La facturación en Paraguay, en corto</p>
+        <p>Toda venta necesita una factura legal. Esta firma usa talonarios preimpresos autorizados por la autoridad tributaria, y cada factura tiene su propio número (ej. <code>001-001-0000123</code>). Cada factura lleva el RUC de quien paga, el alumno o a veces su estudio jurídico, que después lo usa para declarar sus impuestos. Por eso el sistema toma los datos de facturación de su propio campo en el formulario de inscripción.</p>
+        </div>
       </div>
-      <p class="note">Recording payments and issuing invoices are <strong>two separate, password-protected screens</strong> built from the same code. It also handles cash, deposits, partial payments, one invoice for several payments, and someone paying for someone else.</p>
+      <p class="note i-en">Recording payments and issuing invoices are <strong>two separate, password-protected screens</strong> built from the same code. It also handles cash, deposits, partial payments, one invoice for several payments, and someone paying for someone else.</p>
+      <p class="note i-es">Registrar pagos y emitir facturas son <strong>dos pantallas separadas, con contraseña</strong>, hechas con el mismo código. También maneja efectivo, depósitos, pagos parciales, una factura para varios pagos y alguien que paga por otro.</p>
     </div>
   </section>
 
   <section class="band alt">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>A simple core. <span class="accent">Editable edges.</span></h2>
         <p class="sub"><span class="q">“What about promotions, discounts and special deals?”</span>The two common prices are easy to automate. Promotions and special deals change all the time, and a rule for each one would have made the system <strong>hard to use and hard to maintain.</strong></p>
       </div>
+      <div class="center i-es">
+        <h2>Un núcleo simple. <span class="accent">Bordes editables.</span></h2>
+        <p class="sub"><span class="q">“¿Y las promociones, los descuentos y los acuerdos especiales?”</span>Los dos precios comunes son fáciles de automatizar. Las promociones y los acuerdos especiales cambian todo el tiempo, y una regla para cada uno habría hecho el sistema <strong>difícil de usar y de mantener.</strong></p>
+      </div>
       <div class="grid2">
         <div class="tile">
+          <div class="i-en">
           <h3>What the system automates</h3>
           <ul class="list">
             <li>The everyday path: one payment, one transfer, one invoice.</li>
@@ -323,8 +401,19 @@
             <li>Matching each payment to the bank and keeping the three sheets in sync.</li>
             <li>The checks that stop costly mistakes, like a transfer used twice.</li>
           </ul>
+          </div>
+          <div class="i-es">
+          <h3>Qué automatiza el sistema</h3>
+          <ul class="list">
+            <li>El camino de todos los días: un pago, una transferencia, una factura.</li>
+            <li>Los dos precios comunes: <strong>alumno nuevo</strong> (precio completo) y <strong>alumno que vuelve</strong>.</li>
+            <li>Cruzar cada pago con el banco y mantener las tres planillas sincronizadas.</li>
+            <li>Los controles que evitan errores caros, como usar una transferencia dos veces.</li>
+          </ul>
+          </div>
         </div>
         <div class="tile">
+          <div class="i-en">
           <h3>What stays in people’s hands</h3>
           <ul class="list">
             <li>Special cases go under <strong>“Other”</strong>, with a comment the whole team sees, including whoever invoices.</li>
@@ -332,84 +421,114 @@
             <li>Any cell can be fixed by hand; the system keeps the other sheets in sync.</li>
             <li>Rare cases, like cancelling a payment or a credit note, on purpose.</li>
           </ul>
+          </div>
+          <div class="i-es">
+          <h3>Qué queda en manos de la gente</h3>
+          <ul class="list">
+            <li>Los casos especiales van como <strong>“Otro”</strong>, con un comentario que ve todo el equipo, incluida quien factura.</li>
+            <li>Precios especiales, descuentos y acuerdos de grupo: se ajustan en la planilla, como siempre.</li>
+            <li>Cualquier celda se puede corregir a mano; el sistema mantiene sincronizadas las demás planillas.</li>
+            <li>Los casos raros, como anular un pago o una nota de crédito, a propósito.</li>
+          </ul>
+          </div>
         </div>
       </div>
-      <p class="note">The result: <strong>simple to use, simple to maintain</strong>, and it fits naturally into the work the sales and finance team was already doing.</p>
+      <p class="note i-en">The result: <strong>simple to use, simple to maintain</strong>, and it fits naturally into the work the sales and finance team was already doing.</p>
+      <p class="note i-es">El resultado: <strong>simple de usar, simple de mantener</strong>, y se integra de forma natural al trabajo que ya hacía el equipo de ventas y finanzas.</p>
     </div>
   </section>
 
   <section class="band">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>Built to meet people <span class="accent">at their level.</span></h2>
         <p class="sub"><span class="q">“Will a non-technical team actually use it?”</span>Nobody had to learn a new tool. The form speaks the team’s language and only asks for what it needs.</p>
       </div>
-      <div class="feats">
+      <div class="center i-es">
+        <h2>Pensado para cada persona, <span class="accent">a su nivel.</span></h2>
+        <p class="sub"><span class="q">“¿Un equipo no técnico lo va a usar de verdad?”</span>Nadie tuvo que aprender una herramienta nueva. El formulario habla el idioma del equipo y solo pide lo que necesita.</p>
+      </div>
+      <div class="feats i-en">
         <div><strong>Pick, don’t type</strong><p>Course, participant, installment and transfer are chosen from lists.</p></div>
         <div><strong>Search like a person</strong><p>By name or ID number, with or without accents, in any word order.</p></div>
         <div><strong>Plain language</strong><p>Every error says what happened and what to do next.</p></div>
         <div><strong>Phone or computer</strong><p>Works on both, without access to the bank sheet.</p></div>
         <div><strong>Only your part</strong><p>Payments and invoicing each have their own screen.</p></div>
       </div>
+      <div class="feats i-es">
+        <div><strong>Elegir, no escribir</strong><p>Curso, alumno, cuota y transferencia se eligen de listas.</p></div>
+        <div><strong>Buscar como una persona</strong><p>Por nombre o cédula, con o sin tildes, en cualquier orden.</p></div>
+        <div><strong>Lenguaje simple</strong><p>Cada error dice qué pasó y qué hacer.</p></div>
+        <div><strong>Celular o computadora</strong><p>Funciona en los dos, sin acceso a la planilla del banco.</p></div>
+        <div><strong>Solo tu parte</strong><p>Pagos y facturación tienen cada uno su pantalla.</p></div>
+      </div>
     </div>
   </section>
 
   <section class="band alt" id="demo">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>Try it <span class="accent">yourself.</span></h2>
         <p class="sub"><span class="q">“Does it really catch mistakes?”</span>A small copy of the system with made-up participants. Record a payment and watch three sheets change at once, then enter an invoice number. <strong>Try a mistake too</strong>: an amount larger than the transfer, or an invoice number already used.</p>
       </div>
+      <div class="center i-es">
+        <h2>Probalo <span class="accent">vos mismo.</span></h2>
+        <p class="sub"><span class="q">“¿De verdad frena los errores?”</span>Una copia chica del sistema con alumnos inventados. Registrá un pago y mirá cómo cambian tres planillas a la vez; después cargá un número de factura. <strong>Probá también un error</strong>: un monto mayor a la transferencia, o un número de factura ya usado.</p>
+      </div>
       <div class="tile">
       <div class="demo-head">
-        <p class="k">Record a payment</p>
+        <p class="k"><span class="i-en">Record a payment</span><span class="i-es">Registrar un pago</span></p>
         <span style="display:inline-flex;gap:12px;align-items:center;flex-wrap:wrap">
-          <span class="demo-tag">Fictional data generated with AI</span>
-          <button class="btn" id="reset" type="button">Reset demo</button>
+          <span class="demo-tag"><span class="i-en">Fictional data generated with AI</span><span class="i-es">Datos ficticios generados con IA</span></span>
+          <button class="btn" id="reset" type="button"><span class="i-en">Reset demo</span><span class="i-es">Reiniciar demo</span></button>
         </span>
       </div>
       <div class="form">
-        <div class="field wide"><label for="f-prog">Course</label><select id="f-prog"></select></div>
-        <div class="field"><label for="f-stu">Participant</label><select id="f-stu"></select></div>
-        <div class="field"><label for="f-inst">Installment</label><select id="f-inst"></select></div>
-        <div class="field"><label for="f-type">Payment type</label>
-          <select id="f-type"><option value="transfer">Bank transfer</option><option value="cash">Cash</option><option value="other">Other (special case)</option></select></div>
-        <div class="field wide" id="f-note-wrap" style="display:none"><label for="f-note">Comment for the team</label><input id="f-note" placeholder="e.g. Group discount, 3 lawyers from the same firm" autocomplete="off"></div>
-        <div class="field wide" id="f-ref-wrap"><label for="f-ref">Bank transfer <span class="muted" style="font-weight:400">(only unassigned ones)</span></label><select id="f-ref"></select></div>
-        <div class="field"><label for="f-amt">Amount (Gs)</label><input id="f-amt" inputmode="numeric" autocomplete="off"></div>
-        <div class="field wide form-actions"><button class="btn primary" id="save" type="button">Save payment</button></div>
+        <div class="field wide"><label for="f-prog"><span class="i-en">Course</span><span class="i-es">Curso</span></label><select id="f-prog"></select></div>
+        <div class="field"><label for="f-stu"><span class="i-en">Participant</span><span class="i-es">Alumno</span></label><select id="f-stu"></select></div>
+        <div class="field"><label for="f-inst"><span class="i-en">Installment</span><span class="i-es">Cuota</span></label><select id="f-inst"></select></div>
+        <div class="field"><label for="f-type"><span class="i-en">Payment type</span><span class="i-es">Tipo de pago</span></label>
+          <select id="f-type"><option value="transfer"></option><option value="cash"></option><option value="other"></option></select></div>
+        <div class="field wide" id="f-note-wrap" style="display:none"><label for="f-note"><span class="i-en">Comment for the team</span><span class="i-es">Comentario para el equipo</span></label><input id="f-note" autocomplete="off"></div>
+        <div class="field wide" id="f-ref-wrap"><label for="f-ref"><span class="i-en">Bank transfer <span class="muted" style="font-weight:400">(only unassigned ones)</span></span><span class="i-es">Transferencia <span class="muted" style="font-weight:400">(solo las sin asignar)</span></span></label><select id="f-ref"></select></div>
+        <div class="field"><label for="f-amt"><span class="i-en">Amount (Gs)</span><span class="i-es">Monto (Gs)</span></label><input id="f-amt" inputmode="numeric" autocomplete="off"></div>
+        <div class="field wide form-actions"><button class="btn primary" id="save" type="button"><span class="i-en">Save payment</span><span class="i-es">Guardar pago</span></button></div>
       </div>
       <p class="profile" id="profile"></p>
       <p class="msg" id="msg" aria-live="polite"></p>
 
       <div class="sheets">
         <div class="sheet">
-          <div class="sheet-title">Course sheet <span id="prog-name"></span></div>
+          <div class="sheet-title"><span><span class="i-en">Course sheet</span><span class="i-es">Planilla del curso</span></span> <span id="prog-name"></span></div>
           <div class="table-wrap"><table><thead id="prog-head"></thead><tbody id="prog-body"></tbody></table></div>
         </div>
         <div class="sheet">
-          <div class="sheet-title">Bank sheet <span>incoming transfers</span></div>
+          <div class="sheet-title"><span><span class="i-en">Bank sheet</span><span class="i-es">Planilla del banco</span></span> <span><span class="i-en">incoming transfers</span><span class="i-es">transferencias recibidas</span></span></div>
           <div class="table-wrap"><table>
-            <thead><tr><th>Date</th><th>Ref.</th><th style="text-align:right">Amount</th><th>Course</th><th>Participant</th><th>Invoice</th></tr></thead>
+            <thead><tr><th><span class="i-en">Date</span><span class="i-es">Fecha</span></th><th>Ref.</th><th style="text-align:right"><span class="i-en">Amount</span><span class="i-es">Monto</span></th><th><span class="i-en">Course</span><span class="i-es">Curso</span></th><th><span class="i-en">Participant</span><span class="i-es">Alumno</span></th><th><span class="i-en">Invoice</span><span class="i-es">Factura</span></th></tr></thead>
             <tbody id="bank-body"></tbody></table></div>
         </div>
         <div class="sheet span">
-          <div class="sheet-title">Invoices to issue <span id="queue-count"></span></div>
+          <div class="sheet-title"><span><span class="i-en">Invoices to issue</span><span class="i-es">Facturas por hacer</span></span> <span id="queue-count"></span></div>
           <div class="queue" id="queue"></div>
         </div>
       </div>
-      <p class="hint">Amounts in Paraguayan guaraníes (Gs).</p>
+      <p class="hint"><span class="i-en">Amounts in Paraguayan guaraníes (Gs).</span><span class="i-es">Montos en guaraníes paraguayos (Gs).</span></p>
       </div>
     </div>
   </section>
 
   <section class="band">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>One cell. <span class="accent">Three moments.</span></h2>
         <p class="sub"><span class="q">“Is this payment paid, invoiced, or forgotten?”</span>The team still reads the same cell in the same spreadsheet. What changed is what’s in it, and what happens around it.</p>
       </div>
-      <div class="cells">
+      <div class="center i-es">
+        <h2>Una celda. <span class="accent">Tres momentos.</span></h2>
+        <p class="sub"><span class="q">“¿Este pago está pagado, facturado u olvidado?”</span>El equipo sigue leyendo la misma celda en la misma planilla. Lo que cambió es lo que tiene adentro y lo que pasa alrededor.</p>
+      </div>
+      <div class="cells i-en">
         <div class="moment">
           <p class="when">Before</p>
           <div class="xl"><div class="xl-head"><span>F7</span><span>Installment 2</span></div><div class="xl-body">Transfer · 300,000 · 22 Sep</div></div>
@@ -426,17 +545,38 @@
           <p class="why">Same number written in the bank sheet. Removed from the queue.</p>
         </div>
       </div>
+      <div class="cells i-es">
+        <div class="moment">
+          <p class="when">Antes</p>
+          <div class="xl"><div class="xl-head"><span>F7</span><span>Cuota 2</span></div><div class="xl-body">Transferencia · 300.000 · 22 sep</div></div>
+          <p class="why">Una nota escrita a mano después de revisar el banco. Más tarde se sobrescribía con el número de factura.</p>
+        </div>
+        <div class="moment">
+          <p class="when">Pago registrado</p>
+          <div class="xl"><div class="xl-head"><span>F7</span><span>Cuota 2</span></div><div class="xl-body"><span class="chip pend">Pagado – factura pendiente</span><span class="note-corner" title="Nota de la celda"></span></div></div>
+          <p class="why">El detalle del pago queda en una nota de la celda. Banco marcado, factura en cola.</p>
+        </div>
+        <div class="moment">
+          <p class="when">Factura emitida</p>
+          <div class="xl"><div class="xl-head"><span>F7</span><span>Cuota 2</span></div><div class="xl-body selected"><span class="chip inv">001-001-0000123</span><span class="note-corner" title="Nota de la celda"></span></div></div>
+          <p class="why">El mismo número se escribe en el banco. Sale de la cola.</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="band alt">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>Mistakes it <span class="accent">prevents.</span></h2>
         <p class="sub"><span class="q">“What stops a transfer from being used twice, or an invoice from being missed?”</span>The screen guides the user, but <strong>every check is repeated on the server</strong>, so a mistake can’t slip through even if someone skips the screen.</p>
       </div>
+      <div class="center i-es">
+        <h2>Errores que <span class="accent">evita.</span></h2>
+        <p class="sub"><span class="q">“¿Qué impide usar una transferencia dos veces, o que se pierda una factura?”</span>La pantalla guía al usuario, pero <strong>cada control se repite en el servidor</strong>, así ningún error se cuela aunque alguien se saltee la pantalla.</p>
+      </div>
       <div class="table-wrap">
-        <table class="facts">
+        <table class="facts i-en">
           <thead><tr><th>Mistake</th><th>How the system stops it</th></tr></thead>
           <tbody>
             <tr><td>Same transfer used twice</td><td>Once assigned, a transfer disappears from the list. The server checks again before saving.</td></tr>
@@ -449,38 +589,70 @@
             <tr><td>Columns moved or layouts differ</td><td>Columns are found by their header name, so each course sheet can keep its own layout.</td></tr>
           </tbody>
         </table>
+        <table class="facts i-es">
+          <thead><tr><th>Error</th><th>Cómo lo frena el sistema</th></tr></thead>
+          <tbody>
+            <tr><td>La misma transferencia usada dos veces</td><td>Una vez asignada, la transferencia desaparece de la lista. El servidor vuelve a controlar antes de guardar.</td></tr>
+            <tr><td>Monto equivocado</td><td>El monto no puede superar la transferencia, y la ficha del alumno muestra lo que falta pagar.</td></tr>
+            <tr><td>Pago que nunca se factura</td><td>Cada pago entra en “Facturas por hacer”, ordenado por fecha, hasta que se carga su número.</td></tr>
+            <tr><td>Factura a nombre o RUC equivocado</td><td>Los datos de facturación salen del formulario de inscripción, no se vuelven a tipear.</td></tr>
+            <tr><td>Dos personas guardando a la vez</td><td>Un candado deja guardar de a uno. Si la cuota cambió mientras tanto, avisa en vez de pisar el dato.</td></tr>
+            <tr><td>N° de factura mal escrito o repetido</td><td>Se controla el formato y se rechaza un número ya usado para otro alumno. Corregirlo en la planilla lo corrige en todos lados.</td></tr>
+            <tr><td>Filas insertadas, borradas u ordenadas</td><td>Cada pago tiene su propio ID. Las filas se ubican por ese ID y la cédula del alumno, nunca por posición.</td></tr>
+            <tr><td>Columnas movidas o planillas distintas</td><td>Las columnas se detectan por el nombre del encabezado, así cada planilla de curso conserva su estructura.</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
   <section class="band">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>Tested before <span class="accent">it touched real data.</span></h2>
         <p class="sub"><span class="q">“Can we trust it with real money?”</span>Always on temporary copies of the bank, the queue and a course sheet.</p>
       </div>
-      <div class="nums center">
+      <div class="center i-es">
+        <h2>Probado antes de <span class="accent">tocar datos reales.</span></h2>
+        <p class="sub"><span class="q">“¿Le podemos confiar plata de verdad?”</span>Siempre sobre copias temporales del banco, la cola y una planilla de curso.</p>
+      </div>
+      <div class="nums center i-en">
         <div><p class="n">26/26</p><p>automated tests passing, running the real code on copies</p></div>
         <div><p class="n">2</p><p>real bugs found by the tests and fixed before launch</p></div>
         <div><p class="n">~10</p><p>edge cases fixed in two review rounds</p></div>
         <div><p class="n">0</p><p>real spreadsheets touched while testing</p></div>
+      </div>
+      <div class="nums center i-es">
+        <div><p class="n">26/26</p><p>pruebas automáticas aprobadas, corriendo el código real sobre copias</p></div>
+        <div><p class="n">2</p><p>errores reales encontrados por las pruebas y corregidos antes de lanzar</p></div>
+        <div><p class="n">~10</p><p>casos límite corregidos en dos rondas de revisión</p></div>
+        <div><p class="n">0</p><p>planillas reales tocadas durante las pruebas</p></div>
       </div>
     </div>
   </section>
 
   <section class="band alt">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>Before and <span class="accent">after.</span></h2>
         <p class="sub">“How long does it take to record one payment?”</p>
       </div>
-      <div class="chart" role="img" aria-label="Time to record a payment: 4 to 5 minutes before, under 1 minute after">
+      <div class="center i-es">
+        <h2>Antes y <span class="accent">después.</span></h2>
+        <p class="sub">“¿Cuánto se tarda en registrar un pago?”</p>
+      </div>
+      <div class="chart i-en" role="img" aria-label="Time to record a payment: 4 to 5 minutes before, under 1 minute after">
         <div class="bar-row"><span class="who">Before</span><div class="bar b">4–5 min</div></div>
         <div class="bar-row"><span class="who">After</span><div class="bar a">&lt; 1 min</div></div>
         <p class="cap">Measured by the team on their daily routine.</p>
       </div>
+      <div class="chart i-es" role="img" aria-label="Tiempo para registrar un pago: 4 a 5 minutos antes, menos de 1 minuto después">
+        <div class="bar-row"><span class="who">Antes</span><div class="bar b">4–5 min</div></div>
+        <div class="bar-row"><span class="who">Después</span><div class="bar a">&lt; 1 min</div></div>
+        <p class="cap">Medido por el equipo en su trabajo diario.</p>
+      </div>
       <div class="table-wrap">
-        <table class="facts">
+        <table class="facts i-en">
           <thead><tr><th></th><th>Before</th><th>After</th></tr></thead>
           <tbody>
             <tr><td>Which invoices are missing?</td><td class="before">No list, relied on memory</td><td class="after">A queue sorted by date</td></tr>
@@ -491,12 +663,24 @@
             <tr><td>Cost</td><td class="before">—</td><td class="after">$0 in software</td></tr>
           </tbody>
         </table>
+        <table class="facts i-es">
+          <thead><tr><th></th><th>Antes</th><th>Después</th></tr></thead>
+          <tbody>
+            <tr><td>¿Qué facturas faltan?</td><td class="before">Sin lista, de memoria</td><td class="after">Una cola ordenada por fecha</td></tr>
+            <tr><td>A quién facturar</td><td class="before">Se buscaba en la lista de inscripción</td><td class="after">Sale del formulario de inscripción</td></tr>
+            <tr><td>IVA y monto en letras</td><td class="before">Calculados a mano</td><td class="after">Listos en cada tarjeta</td></tr>
+            <tr><td>Detalle del pago</td><td class="before">Se pisaba con el número de factura</td><td class="after">Se conserva, vinculado al banco y la factura</td></tr>
+            <tr><td>Editar a mano</td><td class="before">Posible</td><td class="after">Sigue siendo posible, y se mantiene sincronizado</td></tr>
+            <tr><td>Costo</td><td class="before">—</td><td class="after">$0 en software</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
   <section class="band center">
     <div class="inner">
+      <div class="i-en">
       <h2>What I <span class="accent">did.</span></h2>
       <p class="sub">End to end: from mapping the old process with the team to a tool they use every day.</p>
       <ul class="skills">
@@ -522,13 +706,42 @@
           <li>Developed locally with clasp and git (28 commits over two weeks).</li>
         </ul>
       </details>
+      </div>
+      <div class="i-es">
+      <h2>Qué <span class="accent">hice.</span></h2>
+      <p class="sub">De punta a punta: desde mapear el proceso anterior con el equipo hasta una herramienta que usan todos los días.</p>
+      <ul class="skills">
+        <li>Mapeo de procesos con usuarios</li>
+        <li>Requisitos de una dueña no técnica</li>
+        <li>Validación y conciliación de datos financieros</li>
+        <li>Análisis de KPIs en Google Sheets</li>
+        <li>Diseño fácil de usar</li>
+        <li>Google Apps Script / JavaScript</li>
+        <li>Google Sheets como base de datos</li>
+        <li>Pruebas automáticas</li>
+        <li>Control de acceso</li>
+      </ul>
+      <details style="text-align:left">
+        <summary>Detalles técnicos</summary>
+        <ul>
+          <li>KPIs de pagos y facturación seguidos y analizados en Google Sheets.</li>
+          <li>Backend en Google Apps Script (JavaScript V8): unas 1.000 líneas y 49 funciones. Frontend en HTML/CSS/JavaScript puro, sin librerías, adaptable a celular.</li>
+          <li>Google Sheets es la base de datos, porque el equipo ya trabaja ahí y la dueña necesitaba seguir editando a mano.</li>
+          <li>Un activador instalable detecta los cambios a mano (n° de factura, “hecho”, monto, fecha) y mantiene sincronizadas las planillas del curso y del banco.</li>
+          <li>LockService evita que dos personas guarden a la vez. CacheService maneja las sesiones.</li>
+          <li>Contraseña por pantalla (pagos, facturas o ambas), sesiones de 6 horas, bloqueo de 15 minutos tras 5 intentos fallidos, y cada función del servidor verifica la sesión.</li>
+          <li>Desarrollado en local con clasp y git (28 commits en dos semanas).</li>
+        </ul>
+      </details>
+      </div>
     </div>
   </section>
 
   <footer>
     <div class="inner">
-      <p>This is a real project at my current job. Our participants trust us with their personal and financial information, so no real names, ID numbers, amounts or screenshots of the real system are shown here. All names, ID numbers and amounts in the demo are fictional, generated with AI. Numbers are rounded.</p>
-      <p>Another project for the same team: <a href="https://josecabfe.github.io/storm-proof-records/">How I rescued storm-damaged records and made them searchable in seconds ›</a></p>
+      <p class="i-en">This is a real project at my current job. Our participants trust us with their personal and financial information, so no real names, ID numbers, amounts or screenshots of the real system are shown here. All names, ID numbers and amounts in the demo are fictional, generated with AI. Numbers are rounded.</p>
+      <p class="i-es">Este es un proyecto real de mi trabajo actual. Nuestros alumnos nos confían sus datos personales y financieros, por eso acá no se muestran nombres, cédulas, montos ni capturas del sistema real. Todos los nombres, cédulas y montos del demo son ficticios, generados con IA. Las cifras están redondeadas.</p>
+      <p><span class="i-en">Another project for the same team:</span><span class="i-es">Otro proyecto para el mismo equipo:</span> <a href="https://josecabfe.github.io/storm-proof-records/" data-keeplang><span class="i-en">How I rescued storm-damaged records and made them searchable in seconds ›</span><span class="i-es">Cómo rescaté registros dañados por una tormenta y los hice consultables en segundos ›</span></a></p>
       <p>José Cabral Ferraro · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a> · <a href="https://github.com/josecabfe">GitHub</a></p>
     </div>
   </footer>
@@ -536,12 +749,35 @@
 </main>
 <script>
 (function () {
+  var TITLE = ["Payments & Invoicing Flow", "Flujo de pagos y facturación"];
+  // ---------- Language (EN / ES) ----------
+  var LANG = (function () {
+    var q = new URLSearchParams(location.search).get("lang");
+    if (q === "es" || q === "en") return q;
+    try { var s = localStorage.getItem("lang"); if (s === "es" || s === "en") return s; } catch (e) {}
+    return (navigator.language || "").toLowerCase().indexOf("es") === 0 ? "es" : "en";
+  })();
+  var onLang = [];
+  function T(en, es) { return LANG === "es" ? es : en; }
+  function setLang(l) {
+    LANG = l;
+    document.documentElement.lang = l;
+    document.title = T(TITLE[0], TITLE[1]);
+    try { localStorage.setItem("lang", l); } catch (e) {}
+    try { var u = new URL(location.href); u.searchParams.set("lang", l); history.replaceState(null, "", u); } catch (e) {}
+    document.querySelectorAll("[data-setlang]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.setlang === l ? "true" : "false"); });
+    document.querySelectorAll("a[data-keeplang]").forEach(function (a) { var u = new URL(a.href); u.searchParams.set("lang", l); a.href = u.toString(); });
+    onLang.forEach(function (f) { f(); });
+  }
+  document.querySelectorAll("[data-setlang]").forEach(function (b) { b.addEventListener("click", function () { setLang(b.dataset.setlang); }); });
+
   // ---------- Demo data (fictional) ----------
   var PROGRAMS = {
-    XL: { name: "New Labor Law: Practical Implications", short: "Labor Law", n: 3, price: { "new": 300000, ret: 250000 } },
-    PB: { name: "Data Protection Law for Legal Practice", short: "Data Protection", n: 2, price: { "new": 450000, ret: 400000 } }
+    XL: { name: ["New Labor Law: Practical Implications", "Nueva Ley Laboral: implicancias prácticas"], short: ["Labor Law", "Ley Laboral"], n: 3, price: { "new": 300000, ret: 250000 } },
+    PB: { name: ["Data Protection Law for Legal Practice", "Protección de Datos para la práctica legal"], short: ["Data Protection", "Protección de Datos"], n: 2, price: { "new": 450000, ret: 400000 } }
   };
-  var TYPE = { "new": "New participant", ret: "Returning participant" };
+  var TYPE = { "new": ["New participant", "Alumno nuevo"], ret: ["Returning participant", "Alumno que vuelve"] };
+  function L(pair) { return T(pair[0], pair[1]); }
   // bill = invoicing details from the enrollment form (usually the participant, sometimes their law firm)
   var START = {
     students: [
@@ -575,11 +811,12 @@
   function priceOf(s) { return PROGRAMS[s.p].price[s.t]; }
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  function money(n) { return Number(n).toLocaleString("en-US"); }
+  function money(n) { return Number(n).toLocaleString(LANG === "es" ? "de-DE" : "en-US"); }
   function fmt(d) { var p = d.split("-"); return p[2] + "/" + p[1]; }
   function today() { var t = new Date(); return t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0"); }
   function vat(n) { return Math.floor(n / 11); }   // 10% VAT included, rounded down
 
+  // Amount in words (English)
   var ONES = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
   var TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
   function under1000(n) {
@@ -589,13 +826,38 @@
     else if (n) out.push(ONES[n]);
     return out.join(" ");
   }
-  function words(n) {
+  function wordsEn(n) {
     if (!n) return "Zero";
     var parts = [], m = Math.floor(n / 1e6), k = Math.floor(n / 1000) % 1000, r = n % 1000;
     if (m) parts.push(under1000(m) + " million");
     if (k) parts.push(under1000(k) + " thousand");
     if (r) parts.push(under1000(r));
-    var s = parts.join(" ");
+    return parts.join(" ");
+  }
+  // Amount in words (Spanish), as written on Paraguayan invoices
+  var U = ["", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve",
+           "veinte", "veintiuno", "veintidós", "veintitrés", "veinticuatro", "veinticinco", "veintiséis", "veintisiete", "veintiocho", "veintinueve"];
+  var D = ["", "", "", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"];
+  var C = ["", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos"];
+  function es999(n) {
+    if (n === 100) return "cien";
+    var c = Math.floor(n / 100), r = n % 100, out = [];
+    if (c) out.push(C[c]);
+    if (r < 30) { if (r) out.push(U[r]); }
+    else out.push(D[Math.floor(r / 10)] + (r % 10 ? " y " + U[r % 10] : ""));
+    return out.join(" ");
+  }
+  function apocope(s) { return s.replace(/uno$/, "un").replace(/veintiuno$/, "veintiún"); }
+  function wordsEs(n) {
+    if (!n) return "cero";
+    var m = Math.floor(n / 1e6), k = Math.floor(n / 1000) % 1000, r = n % 1000, parts = [];
+    if (m) parts.push(m === 1 ? "un millón" : apocope(es999(m)) + " millones");
+    if (k) parts.push(k === 1 ? "mil" : apocope(es999(k)) + " mil");
+    if (r) parts.push(es999(r));
+    return parts.join(" ");
+  }
+  function words(n) {
+    var s = LANG === "es" ? wordsEs(n) + " guaraníes" : wordsEn(n) + " guaraníes";
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
@@ -609,8 +871,15 @@
   }
 
   // ---------- Form ----------
-  function fillProgs() {
-    fProg.innerHTML = Object.keys(PROGRAMS).map(function (k) { return '<option value="' + k + '">' + PROGRAMS[k].name + "</option>"; }).join("");
+  function fillStatic() {
+    var keep = fProg.value || "XL";
+    fProg.innerHTML = Object.keys(PROGRAMS).map(function (k) { return '<option value="' + k + '">' + L(PROGRAMS[k].name) + "</option>"; }).join("");
+    fProg.value = keep;
+    var o = fType.options;
+    o[0].text = T("Bank transfer", "Transferencia bancaria");
+    o[1].text = T("Cash", "Efectivo");
+    o[2].text = T("Other (special case)", "Otro (caso especial)");
+    fNote.placeholder = T("e.g. Group discount, 3 lawyers from the same firm", "ej. Descuento por grupo, 3 abogados del mismo estudio");
   }
   function fillStudents() {
     var p = fProg.value;
@@ -621,18 +890,20 @@
     var s = st.students[+fStu.value], first = -1;
     fInst.innerHTML = s.inst.map(function (c, k) {
       var paid = !!c; if (!paid && first < 0) first = k;
-      return '<option value="' + k + '"' + (paid ? " disabled" : "") + ">Installment " + (k + 1) + (paid ? " (paid)" : "") + "</option>";
+      return '<option value="' + k + '"' + (paid ? " disabled" : "") + ">" + T("Installment ", "Cuota ") + (k + 1) + (paid ? T(" (paid)", " (pagada)") : "") + "</option>";
     }).join("");
     if (first >= 0) fInst.value = first;
     fillRefs();
     showProfile();
   }
   function fillRefs() {
+    var keep = fRef.value;
     var free = st.bank.map(function (b, i) { return b.s < 0 ? i : -1; }).filter(function (i) { return i >= 0; });
-    fRef.innerHTML = '<option value="">Choose a transfer…</option>' + free.map(function (i) {
+    fRef.innerHTML = '<option value="">' + T("Choose a transfer…", "Elegí una transferencia…") + "</option>" + free.map(function (i) {
       var b = st.bank[i];
       return '<option value="' + i + '">' + fmt(b.date) + " · " + b.ref + " · " + money(b.amt) + " · " + b.who + "</option>";
     }).join("");
+    if (keep && free.indexOf(+keep) >= 0) fRef.value = keep;
     fRefWrap.style.display = fType.value === "transfer" ? "" : "none";
     fNoteWrap.style.display = fType.value === "other" ? "" : "none";
     setAmount();
@@ -645,9 +916,9 @@
   function showProfile() {
     var s = st.students[+fStu.value], pr = PROGRAMS[s.p], price = priceOf(s);
     var pending = s.inst.filter(function (c) { return !c; }).length;
-    $("profile").innerHTML = "<strong>" + esc(s.name) + "</strong> · ID " + s.id + " · " + TYPE[s.t] + " price: " + pr.n + " × " + money(price) +
-      " · " + (pending ? "<span class=\"before\">" + pending + " still to pay (" + money(pending * price) + ")</span>" : '<span class="after">fully paid</span>') +
-      " · Invoice to: " + esc(s.bill[0]);
+    $("profile").innerHTML = "<strong>" + esc(s.name) + "</strong> · " + T("ID ", "CI ") + s.id + " · " + T(TYPE[s.t][0] + " price: ", "Precio " + TYPE[s.t][1].toLowerCase() + ": ") + pr.n + " × " + money(price) +
+      " · " + (pending ? "<span class=\"before\">" + T(pending + " still to pay (", pending + " por pagar (") + money(pending * price) + ")</span>" : '<span class="after">' + T("fully paid", "todo pagado") + "</span>") +
+      " · " + T("Invoice to: ", "Facturar a: ") + esc(s.bill[0]);
   }
 
   function save() {
@@ -655,13 +926,13 @@
     var amt = parseInt(String(fAmt.value).replace(/\D/g, ""), 10) || 0, type = fType.value, transfer = type === "transfer", bi = fRef.value === "" ? -1 : +fRef.value;
     var note = fNote.value.trim();
     msg.className = "msg err";
-    if (s.inst[k]) { msg.textContent = "That installment is already paid. Pick another one."; return; }
-    if (transfer && bi < 0) { msg.textContent = "Choose which bank transfer this payment came from."; fRef.focus(); return; }
-    if (type === "other" && !note) { msg.textContent = "Special cases need a comment, so the team knows what was agreed."; fNote.focus(); return; }
-    if (amt <= 0) { msg.textContent = "Enter the amount paid."; fAmt.focus(); return; }
-    if (amt > price) { msg.textContent = "The amount is higher than the " + TYPE[s.t].toLowerCase() + " price (" + money(price) + ")."; fAmt.focus(); return; }
+    if (s.inst[k]) { msg.textContent = T("That installment is already paid. Pick another one.", "Esa cuota ya está pagada. Elegí otra."); return; }
+    if (transfer && bi < 0) { msg.textContent = T("Choose which bank transfer this payment came from.", "Elegí de qué transferencia viene este pago."); fRef.focus(); return; }
+    if (type === "other" && !note) { msg.textContent = T("Special cases need a comment, so the team knows what was agreed.", "Los casos especiales necesitan un comentario, para que el equipo sepa qué se acordó."); fNote.focus(); return; }
+    if (amt <= 0) { msg.textContent = T("Enter the amount paid.", "Ingresá el monto pagado."); fAmt.focus(); return; }
+    if (amt > price) { msg.textContent = T("The amount is higher than the " + TYPE[s.t][0].toLowerCase() + " price (", "El monto es mayor al precio de " + TYPE[s.t][1].toLowerCase() + " (") + money(price) + ")."; fAmt.focus(); return; }
     if (transfer && amt > st.bank[bi].amt) {
-      msg.textContent = "The amount is higher than the bank transfer (" + money(st.bank[bi].amt) + "). Check the participant or the transfer.";
+      msg.textContent = T("The amount is higher than the bank transfer (", "El monto es mayor a la transferencia (") + money(st.bank[bi].amt) + T("). Check the participant or the transfer.", "). Revisá el alumno o la transferencia.");
       fAmt.focus(); return;
     }
     var ref = transfer ? st.bank[bi].ref : (type === "cash" ? "CASH-" : "OTHER-") + (++seq);
@@ -672,9 +943,10 @@
     flashKeys["q" + ref] = 1;
     fNote.value = "";
     msg.className = "msg ok";
-    msg.textContent = transfer ? "Saved. Course sheet, bank sheet and invoice queue updated at once."
-      : type === "cash" ? "Saved. Course sheet and invoice queue updated (cash isn’t in the bank)."
-      : "Saved. Course sheet and invoice queue updated. The comment travels with the payment to the invoice queue.";
+    msg.textContent = transfer ? T("Saved. Course sheet, bank sheet and invoice queue updated at once.", "Guardado. Planilla del curso, banco y cola de facturas actualizados a la vez.")
+      : type === "cash" ? T("Saved. Course sheet and invoice queue updated (cash isn’t in the bank).", "Guardado. Planilla del curso y cola de facturas actualizadas (el efectivo no figura en el banco).")
+      : T("Saved. Course sheet and invoice queue updated. The comment travels with the payment to the invoice queue.", "Guardado. Planilla del curso y cola de facturas actualizadas. El comentario viaja con el pago hasta la cola de facturas.");
+    fRef.value = "";
     fillInst();
     renderAll();
   }
@@ -682,19 +954,19 @@
   // ---------- Sheets ----------
   function cell(c) {
     if (!c) return '<span class="empty">—</span>';
-    if (c.pend) return '<span class="chip pend">Paid – invoice pending</span>';
+    if (c.pend) return '<span class="chip pend">' + T("Paid – invoice pending", "Pagado – factura pendiente") + "</span>";
     return '<span class="chip inv">' + c.inv + "</span>";
   }
   function fl(key) { return flashKeys[key] ? ' class="flash"' : ""; }
 
   function renderProgram() {
-    var p = fProg.value, pr = PROGRAMS[p], h = "<tr><th>No.</th><th>Participant</th><th>ID</th><th>Type</th>";
-    for (var k = 0; k < pr.n; k++) h += "<th>Inst. " + (k + 1) + "</th>";
+    var p = fProg.value, pr = PROGRAMS[p], h = "<tr><th>" + T("No.", "N°") + "</th><th>" + T("Participant", "Alumno") + "</th><th>" + T("ID", "CI") + "</th><th>" + T("Type", "Tipo") + "</th>";
+    for (var k = 0; k < pr.n; k++) h += "<th>" + T("Inst. ", "Cuota ") + (k + 1) + "</th>";
     $("prog-head").innerHTML = h + "</tr>";
-    $("prog-name").textContent = pr.name;
+    $("prog-name").textContent = L(pr.name);
     $("prog-body").innerHTML = st.students.map(function (s, i) {
       if (s.p !== p) return "";
-      return "<tr><td>" + s.no + "</td><td>" + esc(s.name) + "</td><td>" + s.id + "</td><td>" + (s.t === "ret" ? "Returning" : "New") + "</td>" +
+      return "<tr><td>" + s.no + "</td><td>" + esc(s.name) + "</td><td>" + s.id + "</td><td>" + (s.t === "ret" ? T("Returning", "Vuelve") : T("New", "Nuevo")) + "</td>" +
         s.inst.map(function (c, k) { return "<td" + fl("c" + i + "-" + k) + ">" + cell(c) + "</td>"; }).join("") + "</tr>";
     }).join("");
   }
@@ -702,29 +974,29 @@
     $("bank-body").innerHTML = st.bank.map(function (b, i) {
       var f = flashKeys["b" + i] ? ' class="flash"' : "";
       return "<tr" + f + "><td>" + fmt(b.date) + "</td><td>" + b.ref + '</td><td class="num">' + money(b.amt) + "</td><td>" +
-        (b.p ? PROGRAMS[b.p].short : '<span class="empty">—</span>') + "</td><td>" +
+        (b.p ? L(PROGRAMS[b.p].short) : '<span class="empty">—</span>') + "</td><td>" +
         (b.s >= 0 ? esc(st.students[b.s].name) : '<span class="empty">' + b.who + "</span>") + "</td><td>" +
         (b.inv ? '<span class="chip inv">' + b.inv + "</span>" : '<span class="empty">—</span>') + "</td></tr>";
     }).join("");
   }
   function renderQueue() {
     st.queue.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
-    $("queue-count").textContent = st.queue.length ? st.queue.length + " pending · sorted by payment date" : "all invoiced";
+    $("queue-count").textContent = st.queue.length ? st.queue.length + T(" pending · sorted by payment date", " pendientes · ordenadas por fecha de pago") : T("all invoiced", "todo facturado");
     $("queue").innerHTML = st.queue.length ? st.queue.map(function (q, i) {
       var s = st.students[q.s], pr = PROGRAMS[s.p];
       return '<div class="qcard' + (flashKeys["q" + q.ref] ? " flash" : "") + '">' +
-        '<div class="qhead"><span>' + fmt(q.date) + "/" + q.date.slice(0, 4) + "</span><span>" + (q.ref.indexOf("CASH") === 0 ? "Cash" : q.ref.indexOf("OTHER") === 0 ? "Other" : q.ref) + "</span></div>" +
-        '<p class="qlabel">Invoice to · from the enrollment form</p>' +
-        '<p class="qname">' + esc(s.bill[0]) + "</p><p>RUC (tax ID) " + s.bill[1] + "</p>" +
-        (s.bill[0] !== s.name ? '<p class="muted">Participant: ' + esc(s.name) + "</p>" : "") +
-        "<p>" + pr.name + " – installment " + (q.k + 1) + " of " + pr.n + "</p>" +
+        '<div class="qhead"><span>' + fmt(q.date) + "/" + q.date.slice(0, 4) + "</span><span>" + (q.ref.indexOf("CASH") === 0 ? T("Cash", "Efectivo") : q.ref.indexOf("OTHER") === 0 ? T("Other", "Otro") : q.ref) + "</span></div>" +
+        '<p class="qlabel">' + T("Invoice to · from the enrollment form", "Facturar a · del formulario de inscripción") + "</p>" +
+        '<p class="qname">' + esc(s.bill[0]) + "</p><p>" + T("RUC (tax ID) ", "RUC ") + s.bill[1] + "</p>" +
+        (s.bill[0] !== s.name ? '<p class="muted">' + T("Participant: ", "Alumno: ") + esc(s.name) + "</p>" : "") +
+        "<p>" + L(pr.name) + T(" – installment ", " – cuota ") + (q.k + 1) + T(" of ", " de ") + pr.n + "</p>" +
         '<p class="qamt">Gs ' + money(q.amt) + "</p>" +
-        '<p class="muted">VAT 10% included: ' + money(vat(q.amt)) + "</p>" +
-        '<p class="muted">' + words(q.amt) + " guaraníes</p>" +
-        (q.note ? '<p class="qnote"><strong>Note:</strong> ' + esc(q.note) + "</p>" : "") +
-        '<div class="qrow"><input data-q="' + i + '" placeholder="001-001-0000123" aria-label="Invoice number for ' + esc(s.name) + '"><button class="btn primary" data-done="' + i + '" type="button">Done</button></div>' +
+        '<p class="muted">' + T("VAT 10% included: ", "IVA 10% incluido: ") + money(vat(q.amt)) + "</p>" +
+        '<p class="muted">' + words(q.amt) + "</p>" +
+        (q.note ? '<p class="qnote"><strong>' + T("Note:", "Nota:") + "</strong> " + esc(q.note) + "</p>" : "") +
+        '<div class="qrow"><input data-q="' + i + '" placeholder="001-001-0000123" aria-label="' + T("Invoice number for ", "Número de factura para ") + esc(s.name) + '"><button class="btn primary" data-done="' + i + '" type="button">' + T("Done", "Hecho") + "</button></div>" +
         '<p class="qerr" id="qerr' + i + '"></p></div>';
-    }).join("") : '<div class="qempty">Nothing left to invoice. Every payment has its invoice number.</div>';
+    }).join("") : '<div class="qempty">' + T("Nothing left to invoice. Every payment has its invoice number.", "No queda nada por facturar. Cada pago tiene su número de factura.") + "</div>";
   }
   function renderAll() { renderProgram(); renderBank(); renderQueue(); }
 
@@ -741,16 +1013,16 @@
     if (/^\d{1,3}-\d{1,3}-\d{1,7}$/.test(no)) {   // accept 1-1-123 and pad it
       var p = no.split("-"); no = p[0].padStart(3, "0") + "-" + p[1].padStart(3, "0") + "-" + p[2].padStart(7, "0");
     }
-    if (!/^\d{3}-\d{3}-\d{7}$/.test(no)) { err.textContent = "Invoice numbers look like 001-001-0000123."; input.focus(); return; }
+    if (!/^\d{3}-\d{3}-\d{7}$/.test(no)) { err.textContent = T("Invoice numbers look like 001-001-0000123.", "Los números de factura tienen la forma 001-001-0000123."); input.focus(); return; }
     var owner = invoiceOwner(no);
-    if (owner >= 0 && owner !== q.s) { err.textContent = "Invoice " + no + " is already used for " + st.students[owner].name + "."; input.focus(); return; }
+    if (owner >= 0 && owner !== q.s) { err.textContent = T("Invoice " + no + " is already used for ", "La factura " + no + " ya está usada para ") + st.students[owner].name + "."; input.focus(); return; }
     st.students[q.s].inst[q.k] = { inv: no };
     flashKeys = {}; flashKeys["c" + q.s + "-" + q.k] = 1;
     st.bank.forEach(function (b, bi) { if (b.ref === q.ref) { b.inv = no; flashKeys["b" + bi] = 1; } });
     st.queue.splice(i, 1);
     if (fProg.value !== st.students[q.s].p) { fProg.value = st.students[q.s].p; fillStudents(); }
     msg.className = "msg ok";
-    msg.textContent = "Invoice " + no + " written in the course sheet and the bank sheet, and removed from the queue.";
+    msg.textContent = T("Invoice " + no + " written in the course sheet and the bank sheet, and removed from the queue.", "Factura " + no + " escrita en la planilla del curso y en la del banco, y quitada de la cola.");
     renderAll();
   }
 
@@ -768,8 +1040,19 @@
   $("queue").addEventListener("click", function (e) { var b = e.target.closest("[data-done]"); if (b) done(+b.dataset.done); });
   $("queue").addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.dataset.q) done(+e.target.dataset.q); });
 
-  fillProgs();
+  // Re-render the demo in the new language, keeping its state
+  onLang.push(function () {
+    if (!st) return;
+    var stu = fStu.value, inst = fInst.value;
+    fillStatic(); fillStudents();
+    fStu.value = stu; fillInst(); if (inst !== "" && !fInst.options[+inst].disabled) { fInst.value = inst; setAmount(); }
+    msg.textContent = ""; msg.className = "msg";
+    renderAll();
+  });
+
+  fillStatic();
   reset();
+  setLang(LANG);
 })();
 </script>
 </body>

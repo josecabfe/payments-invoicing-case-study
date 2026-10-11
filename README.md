@@ -2,7 +2,7 @@
 
 **Case study: a zero-cost web form that records each course payment once and updates the course sheet, the bank sheet and an invoice queue at the same time, for a non-technical sales and finance team.**
 
-### [▶ Read the case study and try the demo](https://josecabfe.github.io/payments-invoicing-case-study/)
+### [▶ Read the case study and try the demo](https://josecabfe.github.io/payments-invoicing-case-study/?lang=en) · [Versión en español](https://josecabfe.github.io/payments-invoicing-case-study/?lang=es)
 
 A consulting firm that also sells specialized training courses, mostly for lawyers, tracked every payment by hand: checking the bank, typing a note into each course spreadsheet, and keeping no list of invoices still to issue. Now one form does the matching in under a minute, and nothing gets forgotten.
 
@@ -61,7 +61,7 @@ Pick from lists instead of typing · search by name or ID number, with or withou
 | | |
 |---|---|
 | Time to record a payment | **under 1 min** (was 4–5 min) |
-| Payments recorded through the form | **150+** |
+| Payments recorded through the form | **150+** in the first 10 days; now fully part of the team’s daily workflow |
 | Daily users | 3 |
 | Extra software cost | $0 (Google Workspace) |
 
