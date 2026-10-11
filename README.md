@@ -73,6 +73,6 @@ Google Apps Script (JavaScript) · Google Sheets · LockService · installable t
 
 *Real project at my current job. Our participants trust us with their personal and financial information, so no real names, ID numbers, amounts or screenshots of the real system are shown. All names, ID numbers and amounts in the demo are fictional, generated with AI. Numbers are rounded.*
 
-*Another project for the same team: [From storm-damaged paper to records found in seconds](https://josecabfe.github.io/storm-proof-records/)*
+*Another project for the same team: [How I rescued storm-damaged records and made them searchable in seconds](https://josecabfe.github.io/storm-proof-records/)*
 
 *Built by José Cabral Ferraro · [LinkedIn](https://www.linkedin.com/in/jose-cabral-ferraro/)*
