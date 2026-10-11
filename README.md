@@ -1,4 +1,4 @@
-# Recording a course payment went from 5 minutes to under 1
+# How I optimized a payment process from 5 minutes to under 1
 
 **Case study: a zero-cost web form that records each course payment once and updates the course sheet, the bank sheet and an invoice queue at the same time, for a non-technical sales and finance team.**
 
@@ -62,7 +62,6 @@ Pick from lists instead of typing · search by name or ID number, with or withou
 |---|---|
 | Time to record a payment | **under 1 min** (was 4–5 min) |
 | Payments recorded through the form | **150+** |
-| Courses covered | 6 (all currently running) |
 | Daily users | 3 |
 | Extra software cost | $0 (Google Workspace) |
 

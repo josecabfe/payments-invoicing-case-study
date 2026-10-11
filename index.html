@@ -5,383 +5,406 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Payments &amp; Invoicing Flow</title>
 <meta name="description" content="Case study: a web form that cut payment recording from 5 minutes to under 1, updating the course sheet, the bank sheet and an invoice queue at once, for a non-technical sales and finance team. Portfolio project by José Cabral Ferraro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     color-scheme: light;
-    --page: #f9f9f7;
-    --surface: #fcfcfb;
-    --ink: #0b0b0b;
-    --ink-2: #52514e;
-    --muted: #898781;
-    --grid: #e1e0d9;
-    --border: rgba(11, 11, 11, 0.10);
-    --accent: #2a78d6;
-    --accent-wash: rgba(42, 120, 214, 0.08);
-    --flash: rgba(42, 120, 214, 0.22);
-    --before: #d03b3b;
-    --after: #006300;
+    --band: #f2f4f7;
+    --band-2: #ffffff;
+    --tile-on-band: #ffffff;
+    --tile-on-band-2: #f2f4f7;
+    --ink: #1d1d1f;
+    --muted: #6e6e73;
+    --faint: #86868b;
+    --line: #d2d2d7;
+    --blue-deep: #0b4f9c;
+    --blue: #2a79c6;
+    --blue-wash: rgba(42, 121, 198, 0.10);
+    --flash: rgba(42, 121, 198, 0.22);
     --pending: #a35a00;
     --pending-wash: rgba(196, 120, 0, 0.10);
-    --cell: #ffffff;
+    --error: #c4321f;
+    --ok: #0b4f9c;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --page: #0d0d0d;
-      --surface: #1a1a19;
-      --ink: #ffffff;
-      --ink-2: #c3c2b7;
-      --muted: #898781;
-      --grid: #2c2c2a;
-      --border: rgba(255, 255, 255, 0.10);
-      --accent: #3987e5;
-      --accent-wash: rgba(57, 135, 229, 0.12);
-      --flash: rgba(57, 135, 229, 0.30);
-      --before: #e66767;
-      --after: #0ca30c;
-      --pending: #e09a3a;
-      --pending-wash: rgba(224, 154, 58, 0.12);
-      --cell: #141413;
+      --band: #000000;
+      --band-2: #111113;
+      --tile-on-band: #1c1c1e;
+      --tile-on-band-2: #1c1c1e;
+      --ink: #f5f5f7;
+      --muted: #a1a1a6;
+      --faint: #86868b;
+      --line: #3a3a3c;
+      --blue-deep: #4f9ff0;
+      --blue: #82bdff;
+      --blue-wash: rgba(79, 159, 240, 0.14);
+      --flash: rgba(79, 159, 240, 0.30);
+      --pending: #f0a64a;
+      --pending-wash: rgba(240, 166, 74, 0.14);
+      --error: #ff6b5a;
+      --ok: #82bdff;
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --page: #0d0d0d;
-    --surface: #1a1a19;
-    --ink: #ffffff;
-    --ink-2: #c3c2b7;
-    --muted: #898781;
-    --grid: #2c2c2a;
-    --border: rgba(255, 255, 255, 0.10);
-    --accent: #3987e5;
-    --accent-wash: rgba(57, 135, 229, 0.12);
-    --flash: rgba(57, 135, 229, 0.30);
-    --before: #e66767;
-    --after: #0ca30c;
-    --pending: #e09a3a;
-    --pending-wash: rgba(224, 154, 58, 0.12);
-    --cell: #141413;
+    --band: #000000;
+    --band-2: #111113;
+    --tile-on-band: #1c1c1e;
+    --tile-on-band-2: #1c1c1e;
+    --ink: #f5f5f7;
+    --muted: #a1a1a6;
+    --faint: #86868b;
+    --line: #3a3a3c;
+    --blue-deep: #4f9ff0;
+    --blue: #82bdff;
+    --blue-wash: rgba(79, 159, 240, 0.14);
+    --flash: rgba(79, 159, 240, 0.30);
+    --pending: #f0a64a;
+    --pending-wash: rgba(240, 166, 74, 0.14);
+    --error: #ff6b5a;
+    --ok: #82bdff;
   }
 
   * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
-    margin: 0;
-    background: var(--page);
-    color: var(--ink);
-    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+    margin: 0; background: var(--band); color: var(--ink);
+    font: 17px/1.55 Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 40px 16px 56px; }
-  a { color: var(--accent); }
+  a { color: var(--blue-deep); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  strong, b { color: var(--ink); font-weight: 600; }
+  h1, h2, h3, .sub, .lede { text-wrap: balance; }
 
-  header { margin-bottom: 28px; }
-  .eyebrow { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
-  .tag { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--ink-2); background: var(--surface); margin-left: 6px; }
-  h1 { font-size: clamp(26px, 4.5vw, 36px); line-height: 1.15; margin: 0 0 12px; font-weight: 650; max-width: 780px; }
-  .lede { margin: 0 0 12px; color: var(--ink-2); font-size: 17px; max-width: 720px; }
-  .byline { font-size: 14px; color: var(--ink-2); margin: 0; }
+  /* Bands: full-width sections that alternate background */
+  .band { background: var(--band); padding: 88px 16px; }
+  .band.alt { background: var(--band-2); }
+  .inner { max-width: 980px; margin: 0 auto; }
+  .narrow { max-width: 760px; margin-left: auto; margin-right: auto; }
+  .center { text-align: center; }
 
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
-  section { margin: 36px 0 0; }
-  h2 { font-size: 21px; margin: 0 0 6px; font-weight: 620; }
-  .sub { color: var(--ink-2); margin: 0 0 16px; max-width: 720px; }
-
-  /* KPI row */
-  .kpis { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 12px; }
-  .kpi-label { font-size: 13px; color: var(--ink-2); margin: 0 0 4px; }
-  .kpi-value { font-size: 30px; font-weight: 620; line-height: 1.1; margin: 0; font-variant-numeric: tabular-nums; }
-  .kpi-note { font-size: 13px; color: var(--muted); margin: 6px 0 0; }
-  .hero .kpi-value { font-size: 54px; }
-
-  /* Problem / constraints */
-  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .two h3, .label-caps { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); margin: 0 0 8px; font-weight: 600; }
-  ul.clean { margin: 0; padding-left: 20px; }
-  ul.clean li { margin-bottom: 6px; }
-
-  /* Flow */
-  .flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 32px; counter-reset: step; }
-  .flow li { position: relative; counter-increment: step; }
-  .flow li .card { height: 100%; padding: 16px 18px; }
-  .flow li .card::before {
-    content: counter(step);
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--accent-wash); color: var(--accent);
-    font-size: 13px; font-weight: 650; margin-bottom: 8px;
+  .eyebrow { font-size: 15px; font-weight: 600; color: var(--muted); margin: 0 0 14px; letter-spacing: 0; }
+  h1 {
+    font-size: clamp(36px, 5.6vw, 60px); line-height: 1.06; letter-spacing: -0.035em;
+    font-weight: 700; margin: 0 0 28px;
   }
-  .flow strong { display: block; margin-bottom: 4px; }
-  .flow p { margin: 0; font-size: 14px; color: var(--ink-2); }
-  .flow li:not(:last-child)::after {
-    content: "→"; position: absolute; right: -24px; top: 50%; transform: translateY(-50%);
-    color: var(--muted); font-size: 18px;
+  h1 .l1 { color: var(--blue-deep); display: block; text-wrap: balance; }
+  h1 .l2 { color: var(--blue); display: block; text-wrap: balance; }
+  .lede { font-size: clamp(19px, 2.2vw, 23px); line-height: 1.45; color: var(--muted); font-weight: 500; margin: 0 auto 22px; max-width: 800px; }
+  .lede strong { color: var(--ink); }
+  .byline { font-size: 15px; color: var(--muted); margin: 0; }
+
+  h2 {
+    font-size: clamp(32px, 4.6vw, 48px); line-height: 1.08; letter-spacing: -0.03em;
+    font-weight: 700; margin: 0 0 14px; color: var(--ink);
   }
-  .flow li:nth-child(3)::after { content: none; }
-  .flow-note { font-size: 14px; color: var(--ink-2); margin: 14px 0 0; }
-  code { font: 13px/1.4 ui-monospace, "Cascadia Mono", Consolas, monospace; background: var(--accent-wash); padding: 1px 5px; border-radius: 4px; }
+  h2 .accent { color: var(--blue-deep); }
+  .sub { font-size: clamp(18px, 2vw, 21px); line-height: 1.45; color: var(--muted); font-weight: 500; margin: 0 auto 48px; max-width: 760px; }
+  .sub strong { color: var(--ink); }
+  h3 { font-size: 21px; letter-spacing: -0.02em; font-weight: 700; margin: 0 0 12px; }
+
+  /* Stats row */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 64px; }
+  .stat { text-align: center; }
+  .stat .n { font-size: clamp(40px, 5.5vw, 60px); font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--blue-deep); margin: 0 0 10px; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 15px; color: var(--muted); margin: 0 auto; max-width: 200px; line-height: 1.4; }
+  .stat .l strong { color: var(--ink); }
+
+  /* Tiles: no borders, flat, rounded */
+  .tile { background: var(--tile-on-band); border-radius: 22px; padding: 32px; }
+  .band.alt .tile { background: var(--tile-on-band-2); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  ul.list { margin: 0; padding-left: 20px; color: var(--muted); }
+  ul.list li { margin-bottom: 10px; }
+  ul.list li::marker { color: var(--blue); }
+  .note { font-size: 17px; color: var(--muted); margin: 28px auto 0; max-width: 760px; text-align: center; }
+  .note strong { color: var(--ink); }
+  code { font: 0.88em/1.4 ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace; background: var(--blue-wash); color: var(--ink); padding: 2px 6px; border-radius: 6px; }
+
+  /* Numbered steps */
+  .steps6 { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 36px; counter-reset: s; }
+  .steps6 li { counter-increment: s; }
+  .steps6 li::before { content: counter(s, decimal-leading-zero); display: block; font-size: 15px; font-weight: 700; color: var(--blue); margin-bottom: 10px; letter-spacing: 0.02em; }
+  .steps6 strong { display: block; font-size: 19px; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .steps6 p { margin: 0; color: var(--muted); font-size: 16px; }
+  .aside { margin-top: 56px; }
+  .aside .k { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blue-deep); margin: 0 0 10px; }
+  .aside p:last-child { margin: 0; color: var(--muted); }
+
+  /* Five features */
+  .feats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 28px; }
+  .feats strong { display: block; font-size: 18px; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .feats p { margin: 0; font-size: 15px; color: var(--muted); }
+
+  /* Before/after bar chart */
+  .chart { max-width: 760px; margin: 0 auto 56px; }
+  .bar-row { display: grid; grid-template-columns: 70px 1fr; gap: 16px; align-items: center; margin-bottom: 14px; }
+  .bar-row .who { font-size: 15px; font-weight: 600; color: var(--muted); text-align: right; }
+  .bar { height: 44px; border-radius: 10px; display: flex; align-items: center; padding: 0 16px; font-weight: 700; font-size: 17px; white-space: nowrap; }
+  .bar.b { background: var(--line); color: var(--ink); width: 100%; }
+  .bar.a { background: var(--blue-deep); color: #fff; width: 18%; min-width: 110px; }
+  .chart .cap { font-size: 14px; color: var(--faint); margin: 6px 0 0 86px; }
 
   /* Tables */
-  table { width: 100%; border-collapse: collapse; font-size: 15px; }
-  th, td { text-align: left; padding: 10px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
-  th { color: var(--ink-2); font-weight: 600; font-size: 13px; }
-  .facts td:first-child { font-weight: 600; width: 28%; }
-  .before { color: var(--before); }
-  .after { color: var(--after); }
+  table { width: 100%; border-collapse: collapse; font-size: 16px; }
+  th, td { text-align: left; padding: 14px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 14px; }
+  .facts td:first-child { font-weight: 600; width: 30%; color: var(--ink); }
+  .facts td { color: var(--muted); }
+  .facts td.after { color: var(--ink); }
+  .facts td.before { color: var(--faint); }
   .table-wrap { overflow-x: auto; }
 
-  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .steps .card { padding: 16px; }
-  .steps .big { font-size: 28px; font-weight: 620; line-height: 1.1; margin: 0 0 6px; font-variant-numeric: tabular-nums; }
-  .steps p { margin: 0; font-size: 14px; color: var(--ink-2); }
-
-  .skills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
-  .skills li { font-size: 14px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); }
-
-  details { margin-top: 12px; }
-  summary { cursor: pointer; color: var(--accent); font-size: 15px; }
-  details ul { margin: 10px 0 0; padding-left: 20px; color: var(--ink-2); font-size: 15px; }
-  details li { margin-bottom: 4px; }
-
-  .demo-tag { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--accent-wash); color: var(--accent); font-weight: 600; }
-  .hint { font-size: 13px; color: var(--muted); margin: 0; }
-  .muted { color: var(--muted); }
+  /* Big numbers (testing) */
+  .nums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .nums .n { font-size: 44px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--blue-deep); margin: 0 0 10px; }
+  .nums p { margin: 0; font-size: 15px; color: var(--muted); }
 
   /* One cell, three moments */
-  .cells { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 12px; align-items: center; }
-  .cells .arrow { color: var(--muted); font-size: 20px; text-align: center; }
-  .moment p { margin: 0; }
-  .moment .when { font-size: 13px; color: var(--ink-2); margin-bottom: 6px; font-weight: 600; }
-  .moment .why { font-size: 13px; color: var(--muted); margin-top: 6px; }
-  .xl {
-    font: 14px/1.3 Calibri, "Segoe UI", Arial, sans-serif; background: var(--cell); color: var(--ink);
-    border: 1px solid var(--grid); padding: 0; border-radius: 4px; overflow: hidden;
-  }
-  .xl-head { display: flex; font-size: 11px; color: var(--muted); background: var(--accent-wash); border-bottom: 1px solid var(--grid); }
-  .xl-head span { padding: 2px 8px; border-right: 1px solid var(--grid); }
-  .xl-body { padding: 8px 10px; min-height: 38px; display: flex; align-items: center; gap: 6px; position: relative; }
-  .xl-body.selected { outline: 2px solid var(--after); outline-offset: -2px; }
-  .note-corner { position: absolute; top: 0; right: 0; width: 0; height: 0; border-top: 8px solid var(--before); border-left: 8px solid transparent; }
+  .cells { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+  .moment .when { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blue-deep); margin: 0 0 12px; }
+  .moment .why { font-size: 15px; color: var(--muted); margin: 12px 0 0; }
+  .xl { font: 14px/1.3 Calibri, "Segoe UI", Arial, sans-serif; background: var(--tile-on-band); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .band.alt .xl { background: var(--tile-on-band-2); }
+  .xl-head { display: flex; font-size: 11px; color: var(--faint); border-bottom: 1px solid var(--line); }
+  .xl-head span { padding: 3px 10px; border-right: 1px solid var(--line); }
+  .xl-body { padding: 10px 12px; min-height: 44px; display: flex; align-items: center; gap: 6px; position: relative; }
+  .xl-body.selected { outline: 2px solid var(--blue-deep); outline-offset: -2px; }
+  .note-corner { position: absolute; top: 0; right: 0; width: 0; height: 0; border-top: 8px solid var(--error); border-left: 8px solid transparent; }
 
-  /* Demo */
-  .demo-bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  /* Skills */
+  .skills { margin: 0 auto; padding: 0; list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 0; max-width: 820px; color: var(--ink); font-weight: 600; font-size: 17px; }
+  .skills li:not(:last-child)::after { content: "·"; color: var(--faint); margin: 0 12px; font-weight: 400; }
+  details { margin: 40px auto 0; max-width: 760px; }
+  summary { cursor: pointer; color: var(--blue-deep); font-weight: 600; text-align: center; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: " ›"; }
+  details[open] summary::after { content: " ⌄"; }
+  details ul { margin: 20px 0 0; padding-left: 20px; color: var(--muted); font-size: 16px; }
+  details li { margin-bottom: 8px; }
+
+  /* ---------- Demo ---------- */
+  .demo-head { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+  .demo-head .k { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blue-deep); margin: 0; }
+  .demo-tag { font-size: 14px; color: var(--faint); }
+  .muted { color: var(--muted); }
+  .hint { font-size: 14px; color: var(--faint); margin: 16px 0 0; }
   .btn {
-    font: inherit; font-size: 13px; color: var(--accent); background: none;
-    border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; cursor: pointer; white-space: nowrap;
+    font: inherit; font-size: 15px; font-weight: 500; color: var(--blue-deep); background: none;
+    border: 0; border-radius: 980px; padding: 6px 12px; cursor: pointer; white-space: nowrap;
   }
-  .btn:hover { background: var(--accent-wash); }
-  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .btn.primary:hover { filter: brightness(1.08); }
-  .form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 14px; align-items: end; }
-  .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-  .field label { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+  .btn:hover { background: var(--blue-wash); }
+  .btn.primary { background: var(--blue-deep); color: #fff; padding: 10px 22px; }
+  .btn.primary:hover { filter: brightness(1.1); background: var(--blue-deep); }
+  .btn:disabled { opacity: .45; cursor: default; }
+  .form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 16px; align-items: end; }
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field label { font-size: 13px; color: var(--muted); font-weight: 600; }
   .field select, .field input, .qcard input {
-    font: inherit; font-size: 14px; color: var(--ink); background: var(--page);
-    border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; width: 100%; min-width: 0;
+    font: inherit; font-size: 15px; color: var(--ink); background: var(--band-2);
+    border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; width: 100%; min-width: 0;
   }
-  .field select:focus, .field input:focus, .qcard input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .band.alt .field select, .band.alt .field input, .band.alt .qcard input { background: var(--band-2); }
+  .field select:focus, .field input:focus, .qcard input:focus { outline: 3px solid var(--blue-wash); border-color: var(--blue); }
   .field.wide { grid-column: span 2; }
-  .form-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .form-actions .btn { padding: 8px 16px; font-size: 14px; }
-  .msg { font-size: 14px; margin: 12px 0 0; min-height: 22px; }
-  .msg.err { color: var(--before); }
-  .msg.ok { color: var(--after); }
-  .profile { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
-  .profile strong { color: var(--ink); }
+  .form-actions { flex-direction: row; align-items: center; }
+  .msg { font-size: 15px; margin: 14px 0 0; min-height: 22px; font-weight: 500; }
+  .msg.err { color: var(--error); }
+  .msg.ok { color: var(--ok); }
+  .profile { font-size: 14px; color: var(--muted); margin: 14px 0 0; }
 
-  .sheets { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin-top: 18px; }
-  .sheet { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--cell); min-width: 0; }
+  .sheets { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 24px; }
+  .sheet { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--band-2); min-width: 0; }
   .sheet.span { grid-column: 1 / -1; }
-  .sheet-title { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; padding: 8px 12px; background: var(--accent-wash); border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 650; }
-  .sheet-title span { font-weight: 400; color: var(--ink-2); font-size: 12px; }
+  .sheet-title { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 700; }
+  .sheet-title span { font-weight: 500; color: var(--faint); font-size: 13px; }
   .sheet table { font-size: 13px; }
-  .sheet th, .sheet td { padding: 6px 8px; white-space: nowrap; }
+  .sheet th, .sheet td { padding: 7px 10px; white-space: nowrap; }
   .sheet th { font-size: 12px; }
   .sheet td.num { text-align: right; font-variant-numeric: tabular-nums; }
-  .chip { display: inline-block; font-size: 12px; padding: 1px 7px; border-radius: 4px; }
+  .chip { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 6px; font-weight: 600; }
   .chip.pend { background: var(--pending-wash); color: var(--pending); }
-  .chip.inv { color: var(--after); font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 12px; padding: 1px 0; }
-  .empty { color: var(--muted); }
+  .chip.inv { color: var(--blue-deep); font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace; font-size: 12px; padding: 2px 0; }
+  .empty { color: var(--faint); }
   .flash { animation: flash 1.8s ease-out; }
   @keyframes flash { 0%, 35% { background: var(--flash); } 100% { background: transparent; } }
 
-  .queue { padding: 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
-  .qcard { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 13px; background: var(--surface); }
-  .qcard p { margin: 0 0 3px; }
-  .qcard .qhead { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 6px; color: var(--ink-2); }
-  .qcard .qname { font-size: 15px; font-weight: 650; color: var(--ink); }
-  .qcard .qamt { font-size: 18px; font-weight: 620; font-variant-numeric: tabular-nums; margin: 6px 0 2px; }
-  .qcard .qrow { display: flex; gap: 8px; margin-top: 10px; }
-  .qcard .qrow input { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; padding: 6px 8px; }
-  .qcard .qerr { color: var(--before); font-size: 12px; margin: 6px 0 0; min-height: 0; }
-  .qcard .qnote { margin-top: 8px; padding: 6px 8px; border-radius: 6px; background: var(--pending-wash); color: var(--ink); }
-  .callout-box { margin-top: 20px; border-left: 4px solid var(--accent); }
-  .callout-box p:last-child { margin: 0; font-size: 15px; }
-  .feats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
-  .feats .card { padding: 16px; }
-  .feats strong { display: block; margin-bottom: 4px; }
-  .feats p { margin: 0; font-size: 14px; color: var(--ink-2); }
-  .qempty { padding: 18px; text-align: center; color: var(--muted); font-size: 14px; }
+  .queue { padding: 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .qcard { border-radius: 14px; padding: 16px; font-size: 14px; background: var(--tile-on-band-2); }
+  .qcard p { margin: 0 0 3px; color: var(--muted); }
+  .qcard .qhead { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; color: var(--faint); font-size: 13px; }
+  .qcard .qlabel { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blue-deep); margin: 0 0 4px; }
+  .qcard .qname { font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+  .qcard .qamt { font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; margin: 8px 0 2px; }
+  .qcard .qrow { display: flex; gap: 8px; margin-top: 12px; }
+  .qcard .qrow input { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace; font-size: 13px; padding: 8px 10px; }
+  .qcard .qrow .btn.primary { padding: 8px 16px; }
+  .qcard .qerr { color: var(--error); font-size: 13px; margin: 6px 0 0; }
+  .qcard .qnote { margin-top: 10px; padding: 8px 10px; border-radius: 10px; background: var(--pending-wash); color: var(--ink); }
+  .qempty { padding: 22px; text-align: center; color: var(--faint); font-size: 15px; }
 
-  footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--grid); font-size: 14px; color: var(--ink-2); }
-  footer p { margin: 0 0 6px; }
+  footer { background: var(--band); padding: 48px 16px 64px; font-size: 14px; color: var(--muted); }
+  footer .inner { border-top: 1px solid var(--line); padding-top: 24px; }
+  footer p { margin: 0 0 8px; max-width: 760px; }
 
+  @media (max-width: 900px) {
+    .feats { grid-template-columns: 1fr 1fr; }
+  }
   @media (max-width: 820px) {
-    .kpis { grid-template-columns: 1fr 1fr; }
-    .kpis .hero { grid-column: 1 / -1; }
-    .two { grid-template-columns: 1fr; }
-    .flow { grid-template-columns: 1fr; gap: 26px; }
-    .flow li::after, .flow li:nth-child(3)::after {
-      content: "↓"; right: auto; left: 50%; top: auto; bottom: -24px; transform: translateX(-50%);
-    }
-    .flow li:last-child::after { content: none; }
-    .steps { grid-template-columns: 1fr 1fr; }
-    .cells { grid-template-columns: 1fr; }
-    .cells .arrow { transform: rotate(90deg); }
+    .band { padding: 64px 16px; }
+    .stats, .nums { grid-template-columns: 1fr 1fr; gap: 36px 16px; }
+    .grid2, .cells { grid-template-columns: 1fr; }
+    .steps6 { grid-template-columns: 1fr 1fr; }
     .form { grid-template-columns: 1fr 1fr; }
     .sheets { grid-template-columns: 1fr; }
+    .tile { padding: 24px; }
   }
-  @media (max-width: 480px) {
-    .steps { grid-template-columns: 1fr; }
+  @media (max-width: 520px) {
+    .steps6, .feats { grid-template-columns: 1fr; }
     .form { grid-template-columns: 1fr; }
     .field.wide { grid-column: auto; }
-    .hero .kpi-value { font-size: 44px; }
-    .card { padding: 16px; }
+    .bar-row { grid-template-columns: 56px 1fr; }
+    .chart .cap { margin-left: 72px; }
   }
-
   @media print {
-    :root { color-scheme: light; }
-    body { background: #fff; font-size: 12.5px; }
-    .wrap { max-width: none; padding: 0; }
-    section { margin-top: 18px; break-inside: avoid; }
-    .card { border-color: #ccc; }
-    details, #demo { display: none !important; }
-    a { color: inherit; text-decoration: none; }
+    .band { padding: 24px 0; }
+    #demo, details { display: none !important; }
   }
 </style>
 </head>
 <body>
-<main class="wrap">
+<main>
 
-  <header>
-    <p class="eyebrow">Case study · Process &amp; Systems <span class="tag">Real project · client data protected</span></p>
-    <h1>Recording a course payment went from 5&nbsp;minutes to under&nbsp;1</h1>
-    <p class="lede">A consulting firm that also sells specialized training courses, mostly for lawyers, tracked every payment by hand: checking the bank, typing a note into each course spreadsheet, and keeping no list of invoices still to issue. I built a web form that records each payment once and updates the course sheet, the bank sheet and an “invoices to issue” queue at the same time. The team still works in the same spreadsheets, and can still edit them by hand.</p>
-    <p class="byline">José Cabral Ferraro · Process &amp; Systems Specialist · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
-  </header>
-
-  <div class="kpis">
-    <div class="card hero">
-      <p class="kpi-label">Time to record a payment</p>
-      <p class="kpi-value">&lt; 1 min</p>
-      <p class="kpi-note">down from 4–5 minutes of cross-checking the bank and several spreadsheets</p>
-    </div>
-    <div class="card">
-      <p class="kpi-label">Payments recorded</p>
-      <p class="kpi-value">150+</p>
-      <p class="kpi-note">in the first 10 days of use</p>
-    </div>
-    <div class="card">
-      <p class="kpi-label">Courses covered</p>
-      <p class="kpi-value">6</p>
-      <p class="kpi-note">every course currently running</p>
-    </div>
-    <div class="card">
-      <p class="kpi-label">Daily users</p>
-      <p class="kpi-value">3</p>
-      <p class="kpi-note">non-technical staff, at $0 extra software cost</p>
-    </div>
-  </div>
-
-  <section>
-    <h2>The problem</h2>
-    <p class="sub">The firm has trained 5,000+ professionals in 190+ courses over 11 years. At that volume, tracking payments by hand doesn’t scale.</p>
-    <div class="two">
-      <div class="card">
-        <h3>What was going wrong</h3>
-        <ul class="clean">
-          <li>Each payment took <strong>4–5 minutes</strong> of cross-checking the bank statement against several spreadsheets, and ended up as a free-text note in a cell.</li>
-          <li>Prices are not the same for everyone: new participants pay full price, returning participants pay another, and on top of that come special promotions, personal discounts and group discounts on request. Every payment had to be checked against its own deal, which is a big part of why it took so long.</li>
-          <li>Every course lives in its own spreadsheet, with 1 to 4 installments and slightly different layouts.</li>
-          <li>Typos, a transfer assigned twice or to the wrong person, and payments whose invoice was never issued, because there was no list of what was still pending.</li>
-          <li>When the invoice was finally issued, its number was typed over the note, so the payment details were lost.</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>What the owner asked for</h3>
-        <ul class="clean">
-          <li><strong>Change our routine as little as possible.</strong> Same spreadsheets, same way of reading them.</li>
-          <li><strong>Everything must stay editable by hand</strong>, so every promotion and special deal can still be handled.</li>
-          <li><strong>The person who invoices shouldn’t see participant and installment details</strong>, only what they need to issue the invoice.</li>
-          <li><strong>No new software costs.</strong></li>
-        </ul>
+  <section class="band center">
+    <div class="inner">
+      <p class="eyebrow">Case study · Process &amp; Systems · Real project, client data protected</p>
+      <h1><span class="l1">How I optimized a payment process</span><span class="l2">from 5&nbsp;minutes to under&nbsp;1.</span></h1>
+      <p class="lede">A consulting firm that also sells specialized training courses, mostly for lawyers, tracked every payment by hand. I built a web form that <strong>records each payment once and updates the course sheet, the bank sheet and an invoice queue at the same time</strong>, while the team keeps working in the same spreadsheets.</p>
+      <p class="byline">José Cabral Ferraro · Process &amp; Systems Specialist · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
+      <div class="stats">
+        <div class="stat"><p class="n">&lt;1 min</p><p class="l">per payment, <strong>down&nbsp;from&nbsp;4–5</strong></p></div>
+        <div class="stat"><p class="n">150+</p><p class="l">payments recorded in the first 10 days</p></div>
+        <div class="stat"><p class="n">3</p><p class="l">non-technical staff use it every day</p></div>
+        <div class="stat"><p class="n">$0</p><p class="l">extra software cost, built on Google Workspace</p></div>
       </div>
     </div>
   </section>
 
-  <section>
-    <h2>How it works now</h2>
-    <p class="sub">One form replaces the cross-checking. Invoices are still written by hand, as before, but nothing gets forgotten.</p>
-    <ol class="flow">
-      <li><div class="card"><strong>Record the payment</strong><p>Pick course, participant and installment, then the bank transfer from a list of incoming transfers not yet assigned.</p></div></li>
-      <li><div class="card"><strong>Course sheet updated</strong><p>The installment cell now reads “Paid – invoice pending”. The payment details are kept as a cell note.</p></div></li>
-      <li><div class="card"><strong>Bank sheet updated</strong><p>The transfer is tagged with the course and the participant, so it can’t be used again.</p></div></li>
-      <li><div class="card"><strong>Queued for invoicing</strong><p>A card with everything the invoice needs. Who to invoice (name or company, and tax ID) comes straight from the enrollment form.</p></div></li>
-      <li><div class="card"><strong>Invoice written</strong><p>By hand, in the pre-printed invoice booklet, exactly as before. Amount, VAT and amount in words are ready to copy.</p></div></li>
-      <li><div class="card"><strong>Number entered once</strong><p>It replaces “pending” in the course sheet, fills the bank’s invoice column and leaves the queue.</p></div></li>
-    </ol>
-    <div class="card callout-box">
-      <p class="label-caps">Invoicing in Paraguay, in short</p>
-      <p>Every sale needs a legal invoice. This firm uses pre-printed invoice booklets authorized by the tax authority, and every invoice has its own number (e.g. <code>001-001-0000123</code>). Each invoice carries the tax ID (RUC) of whoever pays, the participant or sometimes their law firm, which they later use to file their own taxes. That’s why the system takes the invoicing details from their own field in the enrollment form.</p>
-    </div>
-    <p class="flow-note">Recording payments and issuing invoices are two separate, password-protected screens built from the same code, so each person sees only their part. It also handles cash, deposits, partial payments, one invoice covering several payments, and someone paying for someone else.</p>
-  </section>
-
-  <section>
-    <h2>A deliberate choice: a simple core, editable edges</h2>
-    <p class="sub">The two common prices are easy to automate. Promotions, personal discounts and group deals change all the time, and building a rule for each one would have made the system hard to use and hard to maintain.</p>
-    <div class="two">
-      <div class="card">
-        <h3>What the system automates</h3>
-        <ul class="clean">
-          <li>The everyday path: one payment, one transfer, one invoice.</li>
-          <li>The two common prices: <strong>new participant</strong> (full price) and <strong>returning participant</strong>. The participant’s profile shows which one applies.</li>
-          <li>Matching each payment to the bank and keeping the three sheets in sync.</li>
-          <li>The checks that stop costly mistakes, like a transfer used twice.</li>
-        </ul>
+  <section class="band alt">
+    <div class="inner">
+      <div class="center">
+        <h2>The problem.</h2>
+        <p class="sub">The firm has trained <strong>5,000+ professionals in 190+ courses</strong> over 11 years. At that volume, tracking payments by hand doesn’t scale.</p>
       </div>
-      <div class="card">
-        <h3>What stays in people’s hands</h3>
-        <ul class="clean">
-          <li>Special cases go under an <strong>“Other”</strong> category, with a comment that the rest of the team sees, including whoever issues the invoice.</li>
-          <li>Special prices, discounts and group deals: adjusted in the sheet as always.</li>
-          <li>Any cell can be fixed by hand, and the system keeps the other sheets in sync.</li>
-          <li>Rare cases, like cancelling a payment or a credit note, on purpose.</li>
-        </ul>
+      <div class="grid2">
+        <div class="tile">
+          <h3>What was going wrong</h3>
+          <ul class="list">
+            <li>Each payment took <strong>4–5 minutes</strong> of cross-checking the bank statement against several spreadsheets, and ended up as a free-text note in a cell.</li>
+            <li>Prices vary: new participants pay full price, returning participants pay another, plus promotions, personal discounts and group discounts. Every payment had to be checked against its own deal.</li>
+            <li>Every course lives in its own spreadsheet, with 1 to 4 installments and slightly different layouts.</li>
+            <li>Typos, transfers assigned twice or to the wrong person, and invoices never issued, because nothing listed what was pending.</li>
+          </ul>
+        </div>
+        <div class="tile">
+          <h3>What the owner asked for</h3>
+          <ul class="list">
+            <li><strong>Change our routine as little as possible.</strong> Same spreadsheets, same way of reading them.</li>
+            <li><strong>Everything must stay editable by hand</strong>, so every promotion and special deal can still be handled.</li>
+            <li><strong>The person who invoices shouldn’t see participant details</strong>, only what the invoice needs.</li>
+            <li><strong>No new software costs.</strong></li>
+          </ul>
+        </div>
       </div>
     </div>
-    <p class="flow-note">The result: a system that is simple to use, simple to build and maintain, and fits naturally into the work the sales and finance team was already doing.</p>
   </section>
 
-  <section>
-    <h2>Designed to meet people at their level</h2>
-    <p class="sub">Nobody had to learn a new tool. The form speaks the team’s language and only asks for what it needs.</p>
-    <div class="feats">
-      <div class="card"><strong>Pick, don’t type</strong><p>Course, participant, installment and bank transfer are chosen from lists.</p></div>
-      <div class="card"><strong>Search like a person</strong><p>By name or ID number, with or without accents, in any word order.</p></div>
-      <div class="card"><strong>Plain-language messages</strong><p>Every error says what happened and what to do next.</p></div>
-      <div class="card"><strong>Phone or computer</strong><p>Works on both, without needing access to the bank sheet.</p></div>
-      <div class="card"><strong>Only your part</strong><p>Payments and invoicing each have their own screen.</p></div>
+  <section class="band">
+    <div class="inner">
+      <div class="center">
+        <h2>How it works <span class="accent">now.</span></h2>
+        <p class="sub">One form replaces the cross-checking. Invoices are still written by hand, as before, <strong>but nothing gets forgotten.</strong></p>
+      </div>
+      <ol class="steps6">
+        <li><strong>Record the payment</strong><p>Pick course, participant and installment, then the bank transfer from a list of transfers not yet assigned.</p></li>
+        <li><strong>Course sheet updated</strong><p>The installment cell reads “Paid – invoice pending”. Payment details are kept as a cell note.</p></li>
+        <li><strong>Bank sheet updated</strong><p>The transfer is tagged with the course and the participant, so it can’t be used again.</p></li>
+        <li><strong>Queued for invoicing</strong><p>Who to invoice (name or company, and tax ID) comes straight from the enrollment form.</p></li>
+        <li><strong>Invoice written</strong><p>By hand, in the pre-printed booklet. Amount, VAT and amount in words are ready to copy.</p></li>
+        <li><strong>Number entered once</strong><p>It replaces “pending” in the course sheet, fills the bank’s invoice column and leaves the queue.</p></li>
+      </ol>
+      <div class="tile aside narrow">
+        <p class="k">Invoicing in Paraguay, in short</p>
+        <p>Every sale needs a legal invoice. This firm uses pre-printed booklets authorized by the tax authority, and every invoice has its own number (e.g. <code>001-001-0000123</code>). Each invoice carries the tax ID (RUC) of whoever pays, the participant or sometimes their law firm, which they later use to file their own taxes. That’s why the system takes the invoicing details from their own field in the enrollment form.</p>
+      </div>
+      <p class="note">Recording payments and issuing invoices are <strong>two separate, password-protected screens</strong> built from the same code. It also handles cash, deposits, partial payments, one invoice for several payments, and someone paying for someone else.</p>
     </div>
   </section>
 
-  <section id="demo">
-    <h2>Try a simplified version</h2>
-    <p class="sub">A small copy of the system with made-up participants. Record a payment and watch the three sheets change at once, then enter an invoice number. Try a mistake too: an amount larger than the transfer, or an invoice number already used. Or choose “Other” to leave a comment for the team.</p>
-    <div class="card">
-      <div class="demo-bar">
-        <p class="label-caps" style="margin:0">Record a payment</p>
-        <span style="display:inline-flex;gap:10px;align-items:center;flex-wrap:wrap">
-          <button class="btn" id="reset" type="button">↺ Reset demo</button>
+  <section class="band alt">
+    <div class="inner">
+      <div class="center">
+        <h2>A simple core. <span class="accent">Editable edges.</span></h2>
+        <p class="sub">The two common prices are easy to automate. Promotions and special deals change all the time, and a rule for each one would have made the system <strong>hard to use and hard to maintain.</strong></p>
+      </div>
+      <div class="grid2">
+        <div class="tile">
+          <h3>What the system automates</h3>
+          <ul class="list">
+            <li>The everyday path: one payment, one transfer, one invoice.</li>
+            <li>The two common prices: <strong>new participant</strong> (full price) and <strong>returning participant</strong>.</li>
+            <li>Matching each payment to the bank and keeping the three sheets in sync.</li>
+            <li>The checks that stop costly mistakes, like a transfer used twice.</li>
+          </ul>
+        </div>
+        <div class="tile">
+          <h3>What stays in people’s hands</h3>
+          <ul class="list">
+            <li>Special cases go under <strong>“Other”</strong>, with a comment the whole team sees, including whoever invoices.</li>
+            <li>Special prices, discounts and group deals: adjusted in the sheet as always.</li>
+            <li>Any cell can be fixed by hand; the system keeps the other sheets in sync.</li>
+            <li>Rare cases, like cancelling a payment or a credit note, on purpose.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">The result: <strong>simple to use, simple to maintain</strong>, and it fits naturally into the work the sales and finance team was already doing.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="inner">
+      <div class="center">
+        <h2>Built to meet people <span class="accent">at their level.</span></h2>
+        <p class="sub">Nobody had to learn a new tool. The form speaks the team’s language and only asks for what it needs.</p>
+      </div>
+      <div class="feats">
+        <div><strong>Pick, don’t type</strong><p>Course, participant, installment and transfer are chosen from lists.</p></div>
+        <div><strong>Search like a person</strong><p>By name or ID number, with or without accents, in any word order.</p></div>
+        <div><strong>Plain language</strong><p>Every error says what happened and what to do next.</p></div>
+        <div><strong>Phone or computer</strong><p>Works on both, without access to the bank sheet.</p></div>
+        <div><strong>Only your part</strong><p>Payments and invoicing each have their own screen.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" id="demo">
+    <div class="inner">
+      <div class="center">
+        <h2>Try it <span class="accent">yourself.</span></h2>
+        <p class="sub">A small copy of the system with made-up participants. Record a payment and watch three sheets change at once, then enter an invoice number. <strong>Try a mistake too</strong>: an amount larger than the transfer, or an invoice number already used.</p>
+      </div>
+      <div class="tile">
+      <div class="demo-head">
+        <p class="k">Record a payment</p>
+        <span style="display:inline-flex;gap:12px;align-items:center;flex-wrap:wrap">
           <span class="demo-tag">Fictional data generated with AI</span>
+          <button class="btn" id="reset" type="button">Reset demo</button>
         </span>
       </div>
       <div class="form">
@@ -414,29 +437,30 @@
           <div class="queue" id="queue"></div>
         </div>
       </div>
-      <p class="hint" style="margin-top:12px">Amounts in Paraguayan guaraníes (Gs). The real system covers 6 courses and 150+ payments so far.</p>
+      <p class="hint">Amounts in Paraguayan guaraníes (Gs).</p>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2>One cell, before and after</h2>
-    <p class="sub">The team still reads the same cell in the same spreadsheet. What changed is what’s in it, and what happens around it.</p>
-    <div class="card">
+  <section class="band">
+    <div class="inner">
+      <div class="center">
+        <h2>One cell. <span class="accent">Three moments.</span></h2>
+        <p class="sub">The team still reads the same cell in the same spreadsheet. What changed is what’s in it, and what happens around it.</p>
+      </div>
       <div class="cells">
         <div class="moment">
           <p class="when">Before</p>
           <div class="xl"><div class="xl-head"><span>F7</span><span>Installment 2</span></div><div class="xl-body">Transfer · 300,000 · 22 Sep</div></div>
           <p class="why">A free-text note typed by hand after checking the bank. Later overwritten by the invoice number.</p>
         </div>
-        <div class="arrow" aria-hidden="true">→</div>
         <div class="moment">
-          <p class="when">After the payment is recorded</p>
+          <p class="when">Payment recorded</p>
           <div class="xl"><div class="xl-head"><span>F7</span><span>Installment 2</span></div><div class="xl-body"><span class="chip pend">Paid – invoice pending</span><span class="note-corner" title="Cell note"></span></div></div>
           <p class="why">Payment details kept in a cell note. Bank tagged, invoice queued.</p>
         </div>
-        <div class="arrow" aria-hidden="true">→</div>
         <div class="moment">
-          <p class="when">After the invoice is issued</p>
+          <p class="when">Invoice issued</p>
           <div class="xl"><div class="xl-head"><span>F7</span><span>Installment 2</span></div><div class="xl-body selected"><span class="chip inv">001-001-0000123</span><span class="note-corner" title="Cell note"></span></div></div>
           <p class="why">Same number written in the bank sheet. Removed from the queue.</p>
         </div>
@@ -444,86 +468,108 @@
     </div>
   </section>
 
-  <section>
-    <h2>Mistakes it prevents</h2>
-    <p class="sub">The screen guides the user, but every check is repeated on the server, so a mistake can’t slip through even if someone skips the screen.</p>
-    <div class="card table-wrap">
-      <table class="facts">
-        <thead><tr><th>Mistake</th><th>How the system stops it</th></tr></thead>
-        <tbody>
-          <tr><td>Same transfer used twice</td><td>Once assigned, a transfer disappears from the list. The server checks again before saving.</td></tr>
-          <tr><td>Wrong amount</td><td>The amount can’t be larger than the bank transfer, and the participant’s profile shows what is still pending.</td></tr>
-          <tr><td>Payment never invoiced</td><td>Every payment lands in “Invoices to issue”, sorted by date, until its number is entered.</td></tr>
-          <tr><td>Invoice to the wrong name or tax ID</td><td>Invoicing details come from the enrollment form, not retyped.</td></tr>
-          <tr><td>Two people saving at once</td><td>A lock lets one save at a time. If the installment changed meanwhile, it warns instead of overwriting.</td></tr>
-          <tr><td>Invoice number mistyped or reused</td><td>Format is checked, and a number already used for another participant is rejected. Fixing it in the sheet fixes it everywhere.</td></tr>
-          <tr><td>Rows inserted, deleted or sorted</td><td>Each payment has its own ID. Rows are found by that ID and the participant’s ID number, never by row position.</td></tr>
-          <tr><td>Columns moved or layouts differ</td><td>Columns are found by their header name, so each course sheet can keep its own layout.</td></tr>
-        </tbody>
-      </table>
+  <section class="band alt">
+    <div class="inner">
+      <div class="center">
+        <h2>Mistakes it <span class="accent">prevents.</span></h2>
+        <p class="sub">The screen guides the user, but <strong>every check is repeated on the server</strong>, so a mistake can’t slip through even if someone skips the screen.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="facts">
+          <thead><tr><th>Mistake</th><th>How the system stops it</th></tr></thead>
+          <tbody>
+            <tr><td>Same transfer used twice</td><td>Once assigned, a transfer disappears from the list. The server checks again before saving.</td></tr>
+            <tr><td>Wrong amount</td><td>The amount can’t be larger than the bank transfer, and the participant’s profile shows what is still pending.</td></tr>
+            <tr><td>Payment never invoiced</td><td>Every payment lands in “Invoices to issue”, sorted by date, until its number is entered.</td></tr>
+            <tr><td>Invoice to the wrong name or tax ID</td><td>Invoicing details come from the enrollment form, not retyped.</td></tr>
+            <tr><td>Two people saving at once</td><td>A lock lets one save at a time. If the installment changed meanwhile, it warns instead of overwriting.</td></tr>
+            <tr><td>Invoice number mistyped or reused</td><td>Format is checked, and a number already used for another participant is rejected. Fixing it in the sheet fixes it everywhere.</td></tr>
+            <tr><td>Rows inserted, deleted or sorted</td><td>Each payment has its own ID. Rows are found by that ID and the participant’s ID number, never by position.</td></tr>
+            <tr><td>Columns moved or layouts differ</td><td>Columns are found by their header name, so each course sheet can keep its own layout.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2>How I tested it</h2>
-    <p class="sub">Always on temporary copies of the bank, the queue and a course sheet. The real spreadsheets were never touched during testing.</p>
-    <div class="steps">
-      <div class="card"><p class="big">26/26</p><p>automated tests passing, running the real code on copies</p></div>
-      <div class="card"><p class="big">2</p><p>real bugs found by the tests and fixed before launch</p></div>
-      <div class="card"><p class="big">~10</p><p>edge cases found in two review rounds, e.g. a previous participant’s amount left in the form</p></div>
-      <div class="card"><p class="big">0</p><p>real spreadsheets touched while testing</p></div>
+  <section class="band">
+    <div class="inner">
+      <div class="center">
+        <h2>Tested before <span class="accent">it touched real data.</span></h2>
+        <p class="sub">Always on temporary copies of the bank, the queue and a course sheet.</p>
+      </div>
+      <div class="nums center">
+        <div><p class="n">26/26</p><p>automated tests passing, running the real code on copies</p></div>
+        <div><p class="n">2</p><p>real bugs found by the tests and fixed before launch</p></div>
+        <div><p class="n">~10</p><p>edge cases fixed in two review rounds</p></div>
+        <div><p class="n">0</p><p>real spreadsheets touched while testing</p></div>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2>Before and after</h2>
-    <div class="card table-wrap">
-      <table class="facts">
-        <thead><tr><th></th><th>Before</th><th>After</th></tr></thead>
-        <tbody>
-          <tr><td>Recording a payment</td><td class="before">4–5 min cross-checking the bank and several sheets</td><td class="after">Under 1 min, one form; three sheets update at once</td></tr>
-          <tr><td>Which invoices are missing?</td><td class="before">No list, relied on memory</td><td class="after">A queue sorted by date</td></tr>
-          <tr><td>Who to invoice</td><td class="before">Looked up in the enrollment list</td><td class="after">Taken from the enrollment form automatically</td></tr>
-          <tr><td>Invoice data (VAT, amount in words)</td><td class="before">Worked out by hand</td><td class="after">Ready on each card</td></tr>
-          <tr><td>Payment details</td><td class="before">Overwritten by the invoice number</td><td class="after">Kept, linked to bank and invoice</td></tr>
-          <tr><td>Editing by hand</td><td>Possible</td><td class="after">Still possible, and kept in sync</td></tr>
-          <tr><td>Cost</td><td>—</td><td class="after">$0 in software</td></tr>
-        </tbody>
-      </table>
+  <section class="band alt">
+    <div class="inner">
+      <div class="center">
+        <h2>Before and <span class="accent">after.</span></h2>
+        <p class="sub">Minutes to record one payment.</p>
+      </div>
+      <div class="chart" role="img" aria-label="Time to record a payment: 4 to 5 minutes before, under 1 minute after">
+        <div class="bar-row"><span class="who">Before</span><div class="bar b">4–5 min</div></div>
+        <div class="bar-row"><span class="who">After</span><div class="bar a">&lt; 1 min</div></div>
+        <p class="cap">Measured by the team on their daily routine.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="facts">
+          <thead><tr><th></th><th>Before</th><th>After</th></tr></thead>
+          <tbody>
+            <tr><td>Which invoices are missing?</td><td class="before">No list, relied on memory</td><td class="after">A queue sorted by date</td></tr>
+            <tr><td>Who to invoice</td><td class="before">Looked up in the enrollment list</td><td class="after">Taken from the enrollment form</td></tr>
+            <tr><td>VAT and amount in words</td><td class="before">Worked out by hand</td><td class="after">Ready on each card</td></tr>
+            <tr><td>Payment details</td><td class="before">Overwritten by the invoice number</td><td class="after">Kept, linked to bank and invoice</td></tr>
+            <tr><td>Editing by hand</td><td class="before">Possible</td><td class="after">Still possible, and kept in sync</td></tr>
+            <tr><td>Cost</td><td class="before">—</td><td class="after">$0 in software</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2>What I did</h2>
-    <p class="sub">End to end: from mapping the old process with the team to a tool they use every day.</p>
-    <ul class="skills">
-      <li>Process mapping with users</li>
-      <li>Requirements from a non-technical owner</li>
-      <li>Financial data validation &amp; reconciliation</li>
-      <li>User-friendly design</li>
-      <li>Google Apps Script / JavaScript</li>
-      <li>Google Sheets as a database</li>
-      <li>Automated testing</li>
-      <li>Access control</li>
-      <li>Iterating with real users</li>
-    </ul>
-    <details>
-      <summary>Technical details</summary>
-      <ul>
-        <li>Backend in Google Apps Script (JavaScript V8): about 1,000 lines and 49 functions. Frontend in plain HTML/CSS/JavaScript, no libraries, responsive.</li>
-        <li>Google Sheets is the database, because the team already works there and the owner needed to keep editing by hand.</li>
-        <li>An installable trigger watches manual edits (invoice number, “done”, amount, date) and keeps the course and bank sheets in sync.</li>
-        <li>LockService prevents simultaneous saves. CacheService handles sessions.</li>
-        <li>Password per screen (payments, invoices or both), 6-hour sessions, a 15-minute lockout after 5 failed attempts, and every server function checks the session.</li>
-        <li>Developed locally with clasp and git (28 commits over two weeks).</li>
+  <section class="band center">
+    <div class="inner">
+      <h2>What I <span class="accent">did.</span></h2>
+      <p class="sub">End to end: from mapping the old process with the team to a tool they use every day.</p>
+      <ul class="skills">
+        <li>Process mapping with users</li>
+        <li>Requirements from a non-technical owner</li>
+        <li>Financial data validation &amp; reconciliation</li>
+        <li>KPI analysis in Google Sheets</li>
+        <li>User-friendly design</li>
+        <li>Google Apps Script / JavaScript</li>
+        <li>Google Sheets as a database</li>
+        <li>Automated testing</li>
+        <li>Access control</li>
       </ul>
-    </details>
+      <details style="text-align:left">
+        <summary>Technical details</summary>
+        <ul>
+          <li>Payment and invoicing KPIs tracked and analyzed in Google Sheets.</li>
+          <li>Backend in Google Apps Script (JavaScript V8): about 1,000 lines and 49 functions. Frontend in plain HTML/CSS/JavaScript, no libraries, responsive.</li>
+          <li>Google Sheets is the database, because the team already works there and the owner needed to keep editing by hand.</li>
+          <li>An installable trigger watches manual edits (invoice number, “done”, amount, date) and keeps the course and bank sheets in sync.</li>
+          <li>LockService prevents simultaneous saves. CacheService handles sessions.</li>
+          <li>Password per screen (payments, invoices or both), 6-hour sessions, a 15-minute lockout after 5 failed attempts, and every server function checks the session.</li>
+          <li>Developed locally with clasp and git (28 commits over two weeks).</li>
+        </ul>
+      </details>
+    </div>
   </section>
 
   <footer>
-    <p>This is a real project at my current job. Our participants trust us with their personal and financial information, so no real names, ID numbers, amounts or screenshots of the real system are shown here. All names, ID numbers and amounts in the demo are fictional, generated with AI. Numbers are rounded.</p>
-    <p>Another project for the same team: <a href="https://josecabfe.github.io/storm-proof-records/">From storm-damaged paper to records found in seconds →</a></p>
-    <p>José Cabral Ferraro · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
+    <div class="inner">
+      <p>This is a real project at my current job. Our participants trust us with their personal and financial information, so no real names, ID numbers, amounts or screenshots of the real system are shown here. All names, ID numbers and amounts in the demo are fictional, generated with AI. Numbers are rounded.</p>
+      <p>Another project for the same team: <a href="https://josecabfe.github.io/storm-proof-records/">From storm-damaged paper to records found in seconds ›</a></p>
+      <p>José Cabral Ferraro · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a> · <a href="https://github.com/josecabfe">GitHub</a></p>
+    </div>
   </footer>
 
 </main>
@@ -707,14 +753,14 @@
       var s = st.students[q.s], pr = PROGRAMS[s.p];
       return '<div class="qcard' + (flashKeys["q" + q.ref] ? " flash" : "") + '">' +
         '<div class="qhead"><span>' + fmt(q.date) + "/" + q.date.slice(0, 4) + "</span><span>" + (q.ref.indexOf("CASH") === 0 ? "Cash" : q.ref.indexOf("OTHER") === 0 ? "Other" : q.ref) + "</span></div>" +
-        '<p class="label-caps" style="font-size:11px;margin:0 0 2px">Invoice to · from the enrollment form</p>' +
+        '<p class="qlabel">Invoice to · from the enrollment form</p>' +
         '<p class="qname">' + esc(s.bill[0]) + "</p><p>RUC (tax ID) " + s.bill[1] + "</p>" +
         (s.bill[0] !== s.name ? '<p class="muted">Participant: ' + esc(s.name) + "</p>" : "") +
         "<p>" + pr.name + " – installment " + (q.k + 1) + " of " + pr.n + "</p>" +
         '<p class="qamt">Gs ' + money(q.amt) + "</p>" +
         '<p class="muted">VAT 10% included: ' + money(vat(q.amt)) + "</p>" +
         '<p class="muted">' + words(q.amt) + " guaraníes</p>" +
-        (q.note ? '<p class="qnote">💬 ' + esc(q.note) + "</p>" : "") +
+        (q.note ? '<p class="qnote"><strong>Note:</strong> ' + esc(q.note) + "</p>" : "") +
         '<div class="qrow"><input data-q="' + i + '" placeholder="001-001-0000123" aria-label="Invoice number for ' + esc(s.name) + '"><button class="btn primary" data-done="' + i + '" type="button">Done</button></div>' +
         '<p class="qerr" id="qerr' + i + '"></p></div>';
     }).join("") : '<div class="qempty">Nothing left to invoice. Every payment has its invoice number.</div>';
