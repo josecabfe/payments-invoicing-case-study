@@ -27,8 +27,9 @@ The firm has trained 5,000+ professionals in 190+ courses over 11 years. At that
 4. A card is added to "Invoices to issue". Who to invoice (name or company, and tax ID) comes straight from the enrollment form, plus amount, 10% VAT and amount in words.
 5. The invoice is written by hand in the pre-printed booklet, as before.
 6. The invoice number is entered once and written to the course sheet and the bank sheet automatically.
+7. Any invoice can be looked up later by its full or partial number (e.g. "123" finds 1-1-123), with the exact match first and up to 30 results. Each result shows the participant, date, installment, amount with VAT and in words, who it was invoiced to and how it was paid, including every payment an invoice covers. It is read-only.
 
-> **Invoicing in Paraguay, in short:** every sale needs a legal invoice. This firm uses pre-printed invoice booklets authorized by the tax authority, and every invoice has its own number (e.g. `001-001-0000123`). Each invoice carries the tax ID (RUC) of whoever pays, the participant or sometimes their law firm, which they later use to file their own taxes.
+> **Invoicing in Paraguay, in short:** every sale needs a legal invoice. This firm uses pre-printed invoice booklets authorized by the tax authority, and every invoice has its own number (e.g. `001-001-0000123`). Each invoice carries the tax ID (RUC) of whoever pays, the participant or sometimes their law firm, which they later use to file their own taxes. The system also has a mode for virtual invoices authorized by the tax authority (SET).
 
 ## A deliberate choice: a simple core, editable edges
 
@@ -38,7 +39,7 @@ The result is a system that is simple to use, simple to build and maintain, and 
 
 ## Designed to meet people at their level
 
-Pick from lists instead of typing · search by name or ID number, with or without accents · plain-language error messages that say what to do next · works on phone or computer · payments and invoicing each have their own screen.
+Pick from lists instead of typing · search by name or ID number, with or without accents · plain-language error messages that say what to do next · works on phone or computer · payments and invoicing each have their own screen · find any invoice by all or part of its number.
 
 ## Mistakes it prevents
 

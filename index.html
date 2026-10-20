@@ -99,7 +99,7 @@
   .aside p:last-child { margin: 0; color: var(--muted); }
 
   /* Five features */
-  .feats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 28px; }
+  .feats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 36px; }
   .feats strong { display: block; font-size: 18px; letter-spacing: -0.02em; margin-bottom: 6px; }
   .feats p { margin: 0; font-size: 15px; color: var(--muted); }
 
@@ -209,6 +209,20 @@
   .qcard .qerr { color: var(--error); font-size: 13px; margin: 6px 0 0; }
   .qcard .qnote { margin-top: 10px; padding: 8px 10px; border-radius: 10px; background: var(--pending-wash); color: var(--ink); }
   .qempty { padding: 22px; text-align: center; color: var(--faint); font-size: 15px; }
+  .finder { padding: 14px; }
+  .finder .search { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+  .finder .search input {
+    font: 15px ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace; color: var(--ink); background: var(--tile-on-band-2);
+    border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; flex: 1 1 220px; max-width: 340px; min-width: 0;
+  }
+  .finder .search input:focus { outline: 3px solid var(--blue-wash); border-color: var(--blue); }
+  .finder .search .hint { margin: 0; }
+  .finder .results { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 14px; }
+  .finder .results:empty { display: none; }
+  .qcard .tag-exact { font-size: 11px; font-weight: 700; color: var(--ok); }
+  .qcard .pay { border-top: 1px solid var(--line); padding-top: 6px; margin-top: 6px; }
+  .qcard .pay p { margin: 0; }
+  .qcard .ro { font-size: 12px; color: var(--faint); margin-top: 8px; }
 
   footer { background: var(--band); padding: 48px 16px 64px; font-size: 14px; color: var(--muted); }
   footer .inner { border-top: 1px solid var(--line); padding-top: 24px; }
@@ -369,15 +383,15 @@
       <div class="tile aside narrow">
         <div class="i-en">
         <p class="k">Invoicing in Paraguay, in short</p>
-        <p>Every sale needs a legal invoice. This firm uses pre-printed booklets authorized by the tax authority, and every invoice has its own number (e.g. <code>001-001-0000123</code>). Each invoice carries the tax ID (RUC) of whoever pays, the participant or sometimes their law firm, which they later use to file their own taxes. That’s why the system takes the invoicing details from their own field in the enrollment form.</p>
+        <p>Every sale needs a legal invoice. This firm uses pre-printed booklets authorized by the tax authority, and every invoice has its own number (e.g. <code>001-001-0000123</code>). Each invoice carries the tax ID (RUC) of whoever pays, the participant or sometimes their law firm, which they later use to file their own taxes. That’s why the system takes the invoicing details from their own field in the enrollment form. It also has a mode for <strong>virtual invoices</strong> authorized by the tax authority (SET), for when the booklet isn’t used.</p>
         </div>
         <div class="i-es">
         <p class="k">La facturación en Paraguay, en corto</p>
-        <p>Toda venta necesita una factura legal. Esta firma usa talonarios preimpresos autorizados por la autoridad tributaria, y cada factura tiene su propio número (ej. <code>001-001-0000123</code>). Cada factura lleva el RUC de quien paga, el alumno o a veces su estudio jurídico, que después lo usa para declarar sus impuestos. Por eso el sistema toma los datos de facturación de su propio campo en el formulario de inscripción.</p>
+        <p>Toda venta necesita una factura legal. Esta firma usa talonarios preimpresos autorizados por la autoridad tributaria, y cada factura tiene su propio número (ej. <code>001-001-0000123</code>). Cada factura lleva el RUC de quien paga, el alumno o a veces su estudio jurídico, que después lo usa para declarar sus impuestos. Por eso el sistema toma los datos de facturación de su propio campo en el formulario de inscripción. También tiene un modo de <strong>factura virtual</strong> autorizada por la SET, para cuando no se usa el talonario.</p>
         </div>
       </div>
-      <p class="note i-en">Recording payments and issuing invoices are <strong>two separate, password-protected screens</strong> built from the same code. It also handles cash, deposits, partial payments, one invoice for several payments, and someone paying for someone else.</p>
-      <p class="note i-es">Registrar pagos y emitir facturas son <strong>dos pantallas separadas, con contraseña</strong>, hechas con el mismo código. También maneja efectivo, depósitos, pagos parciales, una factura para varios pagos y alguien que paga por otro.</p>
+      <p class="note i-en">Recording payments and issuing invoices are <strong>two separate, password-protected screens</strong> built from the same code. It also handles cash, deposits, partial payments, one invoice for several payments, and someone paying for someone else. A <strong>read-only invoice finder</strong> answers “what does this invoice cover?” in seconds.</p>
+      <p class="note i-es">Registrar pagos y emitir facturas son <strong>dos pantallas separadas, con contraseña</strong>, hechas con el mismo código. También maneja efectivo, depósitos, pagos parciales, una factura para varios pagos y alguien que paga por otro. Un <strong>buscador de facturas, solo de consulta</strong>, responde “¿qué cubre esta factura?” en segundos.</p>
     </div>
   </section>
 
@@ -454,6 +468,7 @@
         <div><strong>Plain language</strong><p>Every error says what happened and what to do next.</p></div>
         <div><strong>Phone or computer</strong><p>Works on both, without access to the bank sheet.</p></div>
         <div><strong>Only your part</strong><p>Payments and invoicing each have their own screen.</p></div>
+        <div><strong>Find any invoice</strong><p>Type all or part of its number and see every payment it covers.</p></div>
       </div>
       <div class="feats i-es">
         <div><strong>Elegir, no escribir</strong><p>Curso, alumno, cuota y transferencia se eligen de listas.</p></div>
@@ -461,6 +476,7 @@
         <div><strong>Lenguaje simple</strong><p>Cada error dice qué pasó y qué hacer.</p></div>
         <div><strong>Celular o computadora</strong><p>Funciona en los dos, sin acceso a la planilla del banco.</p></div>
         <div><strong>Solo tu parte</strong><p>Pagos y facturación tienen cada uno su pantalla.</p></div>
+        <div><strong>Encontrar cualquier factura</strong><p>Escribís todo o parte del número y ves cada pago que cubre.</p></div>
       </div>
     </div>
   </section>
@@ -469,11 +485,11 @@
     <div class="inner">
       <div class="center i-en">
         <h2>Try it <span class="accent">yourself.</span></h2>
-        <p class="sub"><span class="q">“Does it really catch mistakes?”</span>A small copy of the system with made-up participants. Record a payment and watch three sheets change at once, then enter an invoice number. <strong>Try a mistake too</strong>: an amount larger than the transfer, or an invoice number already used.</p>
+        <p class="sub"><span class="q">“Does it really catch mistakes?”</span>A small copy of the system with made-up participants. Record a payment and watch three sheets change at once, then enter an invoice number and look it up in the finder. <strong>Try a mistake too</strong>: an amount larger than the transfer, or an invoice number already used.</p>
       </div>
       <div class="center i-es">
         <h2>Probalo <span class="accent">vos mismo.</span></h2>
-        <p class="sub"><span class="q">“¿De verdad frena los errores?”</span>Una copia chica del sistema con alumnos inventados. Registrá un pago y mirá cómo cambian tres planillas a la vez; después cargá un número de factura. <strong>Probá también un error</strong>: un monto mayor a la transferencia, o un número de factura ya usado.</p>
+        <p class="sub"><span class="q">“¿De verdad frena los errores?”</span>Una copia chica del sistema con alumnos inventados. Registrá un pago y mirá cómo cambian tres planillas a la vez; después cargá un número de factura y buscala en el buscador. <strong>Probá también un error</strong>: un monto mayor a la transferencia, o un número de factura ya usado.</p>
       </div>
       <div class="tile">
       <div class="demo-head">
@@ -511,6 +527,16 @@
         <div class="sheet span">
           <div class="sheet-title"><span><span class="i-en">Invoices to issue</span><span class="i-es">Facturas por hacer</span></span> <span id="queue-count"></span></div>
           <div class="queue" id="queue"></div>
+        </div>
+        <div class="sheet span">
+          <div class="sheet-title"><span><span class="i-en">Find an invoice</span><span class="i-es">Buscar una factura</span></span> <span><span class="i-en">read-only · changes nothing</span><span class="i-es">solo consulta · no modifica nada</span></span></div>
+          <div class="finder">
+            <div class="search">
+              <input id="inv-q" type="search" inputmode="numeric" autocomplete="off" placeholder="118" aria-label="Invoice number, full or partial">
+              <p class="hint"><span class="i-en">Full or partial number. Try 118, 1-120 or 121.</span><span class="i-es">Número completo o parcial. Probá 118, 1-120 o 121.</span></p>
+            </div>
+            <div class="results" id="inv-res"></div>
+          </div>
         </div>
       </div>
       <p class="hint"><span class="i-en">Amounts in Paraguayan guaraníes (Gs).</span><span class="i-es">Montos en guaraníes paraguayos (Gs).</span></p>
@@ -703,6 +729,7 @@
           <li>An installable trigger watches manual edits (invoice number, “done”, amount, date) and keeps the course and bank sheets in sync.</li>
           <li>LockService prevents simultaneous saves. CacheService handles sessions.</li>
           <li>Password per screen (payments, invoices or both), 6-hour sessions, a 15-minute lockout after 5 failed attempts, and every server function checks the session.</li>
+          <li>Invoice finder: matches full or partial numbers (e.g. “123” finds 1-1-123), shows the exact match first and up to 30 results, groups every payment under one invoice, and only reads the sheets.</li>
           <li>Developed locally with clasp and git (28 commits over two weeks).</li>
         </ul>
       </details>
@@ -730,6 +757,7 @@
           <li>Un activador instalable detecta los cambios a mano (n° de factura, “hecho”, monto, fecha) y mantiene sincronizadas las planillas del curso y del banco.</li>
           <li>LockService evita que dos personas guarden a la vez. CacheService maneja las sesiones.</li>
           <li>Contraseña por pantalla (pagos, facturas o ambas), sesiones de 6 horas, bloqueo de 15 minutos tras 5 intentos fallidos, y cada función del servidor verifica la sesión.</li>
+          <li>Buscador de facturas: encuentra números completos o parciales (ej. “123” encuentra 1-1-123), muestra primero la coincidencia exacta y hasta 30 resultados, agrupa todos los pagos de una misma factura y solo lee las planillas.</li>
           <li>Desarrollado en local con clasp y git (28 commits en dos semanas).</li>
         </ul>
       </details>
@@ -781,11 +809,11 @@
   // bill = invoicing details from the enrollment form (usually the participant, sometimes their law firm)
   var START = {
     students: [
-      { p: "XL", no: 1, t: "new", name: "Ana Torres", id: "4.218.390", bill: ["Ana Torres", "4218390-5"], inst: [{ inv: "001-001-0000118" }, { pend: "TRF-5512" }, null] },
-      { p: "XL", no: 2, t: "new", name: "Bruno Medina", id: "5.067.112", bill: ["Bruno Medina", "5067112-8"], inst: [{ inv: "001-001-0000119" }, null, null] },
+      { p: "XL", no: 1, t: "new", name: "Ana Torres", id: "4.218.390", bill: ["Ana Torres", "4218390-5"], inst: [{ inv: "001-001-0000118", ref: "TRF-5498", date: "2026-09-22", amt: 300000 }, { pend: "TRF-5512" }, null] },
+      { p: "XL", no: 2, t: "new", name: "Bruno Medina", id: "5.067.112", bill: ["Bruno Medina", "5067112-8"], inst: [{ inv: "001-001-0000119", ref: "CASH-0", date: "2026-09-23", amt: 300000 }, null, null] },
       { p: "XL", no: 3, t: "new", name: "Camila Rojas", id: "3.991.457", bill: ["Camila Rojas", "3991457-2"], inst: [null, null, null] },
-      { p: "XL", no: 4, t: "ret", name: "Daniel Vera", id: "4.730.268", bill: ["Daniel Vera", "4730268-0"], inst: [{ inv: "001-001-0000120" }, { inv: "001-001-0000122" }, null] },
-      { p: "PB", no: 1, t: "new", name: "Elena Duarte", id: "5.302.845", bill: ["Elena Duarte", "5302845-1"], inst: [{ inv: "001-001-0000121" }, null] },
+      { p: "XL", no: 4, t: "ret", name: "Daniel Vera", id: "4.730.268", bill: ["Daniel Vera", "4730268-0"], inst: [{ inv: "001-001-0000120", ref: "TRF-5470", date: "2026-09-18", amt: 250000 }, { inv: "001-001-0000120", ref: "TRF-5470", date: "2026-09-18", amt: 250000 }, null] },
+      { p: "PB", no: 1, t: "new", name: "Elena Duarte", id: "5.302.845", bill: ["Elena Duarte", "5302845-1"], inst: [{ inv: "001-001-0000121", ref: "TRF-5476", date: "2026-09-19", amt: 450000 }, null] },
       { p: "PB", no: 2, t: "ret", name: "Federico Sosa", id: "4.115.903", bill: ["Sosa & Partners Law Firm", "80045612-3"], inst: [null, null] },
       { p: "PB", no: 3, t: "new", name: "Gabriela Núñez", id: "3.874.226", bill: ["Gabriela Núñez", "3874226-6"], inst: [{ pend: "TRF-5520" }, null] }
     ],
@@ -998,7 +1026,60 @@
         '<p class="qerr" id="qerr' + i + '"></p></div>';
     }).join("") : '<div class="qempty">' + T("Nothing left to invoice. Every payment has its invoice number.", "No queda nada por facturar. Cada pago tiene su número de factura.") + "</div>";
   }
-  function renderAll() { renderProgram(); renderBank(); renderQueue(); }
+  function renderAll() { renderProgram(); renderBank(); renderQueue(); renderFinder(); }
+
+  // ---------- Invoice finder (read-only) ----------
+  function shortNo(no) { return no.split("-").map(function (x) { return String(parseInt(x, 10)); }).join("-"); }
+  function invoices() {
+    var map = {}, list = [];
+    st.students.forEach(function (s, si) {
+      s.inst.forEach(function (c, k) {
+        if (!c || !c.inv) return;
+        if (!map[c.inv]) { map[c.inv] = { no: c.inv, pays: [] }; list.push(map[c.inv]); }
+        map[c.inv].pays.push({ s: si, k: k, ref: c.ref, date: c.date, amt: c.amt });
+      });
+    });
+    return list;
+  }
+  function payForm(ref) {
+    if (!ref) return "—";
+    if (ref.indexOf("CASH") === 0) return T("Cash", "Efectivo");
+    if (ref.indexOf("OTHER") === 0) return T("Other (special case)", "Otro (caso especial)");
+    return T("Bank transfer · ", "Transferencia · ") + ref;
+  }
+  function renderFinder() {
+    var raw = $("inv-q").value.trim(), res = $("inv-res");
+    if (!/\d/.test(raw)) { res.innerHTML = ""; return; }
+    var hasDash = raw.indexOf("-") >= 0;
+    var qn = hasDash ? raw.split("-").filter(function (x) { return x !== ""; }).map(function (x) { return String(parseInt(x.replace(/\D/g, ""), 10) || 0); }).join("-")
+                     : String(parseInt(raw.replace(/\D/g, ""), 10) || 0);
+    var found = invoices().filter(function (v) { return shortNo(v.no).indexOf(qn) >= 0 || v.no.indexOf(raw) >= 0; });
+    found.forEach(function (v) {
+      var sn = shortNo(v.no);
+      v.exact = v.no === raw || ("-" + sn).slice(-(qn.length + 1)) === "-" + qn;   // "120", "1-120" and "1-1-120" all match 1-1-120
+    });
+    found.sort(function (a, b) { return (b.exact - a.exact) || (a.no < b.no ? 1 : -1); });
+    found = found.slice(0, 30);   // same cap as the real system
+    if (!found.length) { res.innerHTML = '<div class="qempty">' + T("No invoice with that number.", "No hay ninguna factura con ese número.") + "</div>"; return; }
+    res.innerHTML = found.map(function (v) {
+      var s0 = st.students[v.pays[0].s], total = 0, last = "";
+      var pays = v.pays.map(function (p) {
+        var s = st.students[p.s], pr = PROGRAMS[s.p];
+        total += p.amt || 0; if (p.date > last) last = p.date;
+        return '<div class="pay"><p><strong style="color:var(--ink)">' + esc(s.name) + "</strong> · " + L(pr.short) + T(" · inst. ", " · cuota ") + (p.k + 1) + T(" of ", " de ") + pr.n + "</p>" +
+          "<p>Gs " + money(p.amt || 0) + " · " + payForm(p.ref) + (p.date ? " · " + fmt(p.date) : "") + "</p></div>";
+      }).join("");
+      return '<div class="qcard"><div class="qhead"><span class="chip inv">' + v.no + "</span>" +
+        (v.exact ? '<span class="tag-exact">' + T("Exact match", "Coincidencia exacta") + "</span>" : "<span>" + (last ? fmt(last) + "/" + last.slice(0, 4) : "") + "</span>") + "</div>" +
+        '<p class="qlabel">' + T("Invoiced to", "Facturado a") + "</p>" +
+        '<p class="qname">' + esc(s0.bill[0]) + "</p><p>" + T("RUC (tax ID) ", "RUC ") + s0.bill[1] + "</p>" +
+        '<p class="qamt">Gs ' + money(total) + "</p>" +
+        '<p class="muted">' + T("VAT 10% included: ", "IVA 10% incluido: ") + money(vat(total)) + "</p>" +
+        '<p class="muted">' + words(total) + "</p>" +
+        (v.pays.length > 1 ? '<p style="margin-top:8px;color:var(--ink)"><strong>' + v.pays.length + T(" payments on this invoice", " pagos en esta factura") + "</strong></p>" : "") +
+        pays + '<p class="ro">' + T("Read-only: nothing is changed.", "Solo consulta: no se modifica nada.") + "</p></div>";
+    }).join("");
+  }
 
   function invoiceOwner(no) {
     for (var i = 0; i < st.students.length; i++) {
@@ -1016,7 +1097,7 @@
     if (!/^\d{3}-\d{3}-\d{7}$/.test(no)) { err.textContent = T("Invoice numbers look like 001-001-0000123.", "Los números de factura tienen la forma 001-001-0000123."); input.focus(); return; }
     var owner = invoiceOwner(no);
     if (owner >= 0 && owner !== q.s) { err.textContent = T("Invoice " + no + " is already used for ", "La factura " + no + " ya está usada para ") + st.students[owner].name + "."; input.focus(); return; }
-    st.students[q.s].inst[q.k] = { inv: no };
+    st.students[q.s].inst[q.k] = { inv: no, ref: q.ref, date: q.date, amt: q.amt };
     flashKeys = {}; flashKeys["c" + q.s + "-" + q.k] = 1;
     st.bank.forEach(function (b, bi) { if (b.ref === q.ref) { b.inv = no; flashKeys["b" + bi] = 1; } });
     st.queue.splice(i, 1);
@@ -1036,7 +1117,8 @@
     if (b) fAmt.value = money(Math.min(b.amt, priceOf(st.students[+fStu.value])));
   });
   $("save").addEventListener("click", save);
-  $("reset").addEventListener("click", reset);
+  $("reset").addEventListener("click", function () { $("inv-q").value = ""; reset(); });
+  $("inv-q").addEventListener("input", renderFinder);
   $("queue").addEventListener("click", function (e) { var b = e.target.closest("[data-done]"); if (b) done(+b.dataset.done); });
   $("queue").addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.dataset.q) done(+e.target.dataset.q); });
 
