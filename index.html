@@ -178,7 +178,12 @@
   .msg { font-size: 15px; margin: 14px 0 0; min-height: 22px; font-weight: 500; }
   .msg.err { color: var(--error); }
   .msg.ok { color: var(--ok); }
+  .msg.warn { color: var(--pending); }
   .profile { font-size: 14px; color: var(--muted); margin: 14px 0 0; }
+  .preview { font-size: 13px; color: var(--muted); margin: 0; min-height: 18px; }
+  .preview strong { color: var(--ink); }
+  .preview.warn strong { color: var(--pending); }
+  td.due { white-space: nowrap; position: relative; }
 
   .sheets { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 24px; }
   .sheet { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--band-2); min-width: 0; }
@@ -332,7 +337,7 @@
         </div>
         <div class="tile">
           <div class="i-en">
-          <h3>What the owner asked for</h3>
+          <h3>What management asked for</h3>
           <ul class="list">
             <li><strong>Change our routine as little as possible.</strong> Same spreadsheets, same way of reading them.</li>
             <li><strong>Everything must stay editable by hand</strong>, so every promotion and special deal can still be handled.</li>
@@ -341,7 +346,7 @@
           </ul>
           </div>
           <div class="i-es">
-          <h3>Qué pidió la dueña</h3>
+          <h3>Qué pidió la gerencia</h3>
           <ul class="list">
             <li><strong>Cambiar lo mínimo nuestra forma de trabajar.</strong> Las mismas planillas, leídas de la misma manera.</li>
             <li><strong>Todo tiene que seguir siendo editable a mano</strong>, para poder manejar cada promoción y acuerdo especial.</li>
@@ -366,7 +371,7 @@
       </div>
       <ol class="steps6 i-en">
         <li><strong>Record the payment</strong><p>Pick course, participant and installment, then the bank transfer from a list of transfers not yet assigned.</p></li>
-        <li><strong>Course sheet updated</strong><p>The installment cell reads “Paid – invoice pending”. Payment details are kept as a cell note.</p></li>
+        <li><strong>Course sheet updated</strong><p>The installment cell reads “Paid – invoice pending”, and the participant’s pending balance goes down by itself. Payment details are kept as a cell note.</p></li>
         <li><strong>Bank sheet updated</strong><p>The transfer is tagged with the course and the participant, so it can’t be used again.</p></li>
         <li><strong>Queued for invoicing</strong><p>Who to invoice (name or company, and tax ID) comes straight from the enrollment form.</p></li>
         <li><strong>Invoice written</strong><p>By hand, in the pre-printed booklet. Amount, VAT and amount in words are ready to copy.</p></li>
@@ -374,7 +379,7 @@
       </ol>
       <ol class="steps6 i-es">
         <li><strong>Se registra el pago</strong><p>Se elige curso, alumno y cuota, y la transferencia de una lista de transferencias todavía sin asignar.</p></li>
-        <li><strong>Se actualiza el curso</strong><p>La celda de la cuota dice “Pagado – factura pendiente”. El detalle del pago queda como nota de la celda.</p></li>
+        <li><strong>Se actualiza el curso</strong><p>La celda de la cuota dice “Pagado – factura pendiente” y el saldo pendiente del alumno baja solo. El detalle del pago queda como nota de la celda.</p></li>
         <li><strong>Se actualiza el banco</strong><p>La transferencia queda marcada con el curso y el alumno, así no se puede usar dos veces.</p></li>
         <li><strong>Pasa a facturación</strong><p>A quién facturar (nombre o empresa, y RUC) sale directo del formulario de inscripción.</p></li>
         <li><strong>Se escribe la factura</strong><p>A mano, en el talonario preimpreso. Monto, IVA y monto en letras están listos para copiar.</p></li>
@@ -413,6 +418,7 @@
             <li>The everyday path: one payment, one transfer, one invoice.</li>
             <li>The two common prices: <strong>new participant</strong> (full price) and <strong>returning participant</strong>.</li>
             <li>Matching each payment to the bank and keeping the three sheets in sync.</li>
+            <li>Subtracting each payment from the participant’s <strong>pending balance</strong>, with a preview before saving.</li>
             <li>The checks that stop costly mistakes, like a transfer used twice.</li>
           </ul>
           </div>
@@ -422,6 +428,7 @@
             <li>El camino de todos los días: un pago, una transferencia, una factura.</li>
             <li>Los dos precios comunes: <strong>alumno nuevo</strong> (precio completo) y <strong>alumno que vuelve</strong>.</li>
             <li>Cruzar cada pago con el banco y mantener las tres planillas sincronizadas.</li>
+            <li>Restar cada pago del <strong>saldo pendiente</strong> del alumno, con una vista previa antes de guardar.</li>
             <li>Los controles que evitan errores caros, como usar una transferencia dos veces.</li>
           </ul>
           </div>
@@ -431,7 +438,7 @@
           <h3>What stays in people’s hands</h3>
           <ul class="list">
             <li>Special cases go under <strong>“Other”</strong>, with a comment the whole team sees, including whoever invoices.</li>
-            <li>Special prices, discounts and group deals: adjusted in the sheet as always.</li>
+            <li>Special prices, discounts and group deals: adjusted in the sheet as always. The next payment is subtracted from the corrected balance.</li>
             <li>Any cell can be fixed by hand; the system keeps the other sheets in sync.</li>
             <li>Rare cases, like cancelling a payment or a credit note, on purpose.</li>
           </ul>
@@ -440,7 +447,7 @@
           <h3>Qué queda en manos de la gente</h3>
           <ul class="list">
             <li>Los casos especiales van como <strong>“Otro”</strong>, con un comentario que ve todo el equipo, incluida quien factura.</li>
-            <li>Precios especiales, descuentos y acuerdos de grupo: se ajustan en la planilla, como siempre.</li>
+            <li>Precios especiales, descuentos y acuerdos de grupo: se ajustan en la planilla, como siempre. El próximo pago se resta del saldo corregido.</li>
             <li>Cualquier celda se puede corregir a mano; el sistema mantiene sincronizadas las demás planillas.</li>
             <li>Los casos raros, como anular un pago o una nota de crédito, a propósito.</li>
           </ul>
@@ -485,11 +492,11 @@
     <div class="inner">
       <div class="center i-en">
         <h2>Try it <span class="accent">yourself.</span></h2>
-        <p class="sub"><span class="q">“Does it really catch mistakes?”</span>A small copy of the system with made-up participants. Record a payment and watch three sheets change at once, then enter an invoice number and look it up in the finder. <strong>Try a mistake too</strong>: an amount larger than the transfer, or an invoice number already used.</p>
+        <p class="sub"><span class="q">“Does it really catch mistakes?”</span>A small copy of the system with made-up participants. Record a payment and watch three sheets change at once (the pending balance is previewed before you save), then enter an invoice number and look it up in the finder. <strong>Try the special cases too</strong>: an amount larger than the transfer, an invoice number already used, Daniel Vera paying more than he owes, or Federico Sosa, whose balance hasn’t been entered yet.</p>
       </div>
       <div class="center i-es">
         <h2>Probalo <span class="accent">vos mismo.</span></h2>
-        <p class="sub"><span class="q">“¿De verdad frena los errores?”</span>Una copia chica del sistema con alumnos inventados. Registrá un pago y mirá cómo cambian tres planillas a la vez; después cargá un número de factura y buscala en el buscador. <strong>Probá también un error</strong>: un monto mayor a la transferencia, o un número de factura ya usado.</p>
+        <p class="sub"><span class="q">“¿De verdad frena los errores?”</span>Una copia chica del sistema con alumnos inventados. Registrá un pago y mirá cómo cambian tres planillas a la vez (el saldo pendiente se ve antes de guardar); después cargá un número de factura y buscala en el buscador. <strong>Probá también los casos especiales</strong>: un monto mayor a la transferencia, un número de factura ya usado, Daniel Vera pagando más de lo que debe, o Federico Sosa, que todavía no tiene cargado su saldo.</p>
       </div>
       <div class="tile">
       <div class="demo-head">
@@ -507,18 +514,18 @@
           <select id="f-type"><option value="transfer"></option><option value="cash"></option><option value="other"></option></select></div>
         <div class="field wide" id="f-note-wrap" style="display:none"><label for="f-note"><span class="i-en">Comment for the team</span><span class="i-es">Comentario para el equipo</span></label><input id="f-note" autocomplete="off"></div>
         <div class="field wide" id="f-ref-wrap"><label for="f-ref"><span class="i-en">Bank transfer <span class="muted" style="font-weight:400">(only unassigned ones)</span></span><span class="i-es">Transferencia <span class="muted" style="font-weight:400">(solo las sin asignar)</span></span></label><select id="f-ref"></select></div>
-        <div class="field"><label for="f-amt"><span class="i-en">Amount (Gs)</span><span class="i-es">Monto (Gs)</span></label><input id="f-amt" inputmode="numeric" autocomplete="off"></div>
+        <div class="field"><label for="f-amt"><span class="i-en">Amount (Gs)</span><span class="i-es">Monto (Gs)</span></label><input id="f-amt" inputmode="numeric" autocomplete="off"><p class="preview" id="f-prev" aria-live="polite"></p></div>
         <div class="field wide form-actions"><button class="btn primary" id="save" type="button"><span class="i-en">Save payment</span><span class="i-es">Guardar pago</span></button></div>
       </div>
       <p class="profile" id="profile"></p>
       <p class="msg" id="msg" aria-live="polite"></p>
 
       <div class="sheets">
-        <div class="sheet">
+        <div class="sheet span">
           <div class="sheet-title"><span><span class="i-en">Course sheet</span><span class="i-es">Planilla del curso</span></span> <span id="prog-name"></span></div>
           <div class="table-wrap"><table><thead id="prog-head"></thead><tbody id="prog-body"></tbody></table></div>
         </div>
-        <div class="sheet">
+        <div class="sheet span">
           <div class="sheet-title"><span><span class="i-en">Bank sheet</span><span class="i-es">Planilla del banco</span></span> <span><span class="i-en">incoming transfers</span><span class="i-es">transferencias recibidas</span></span></div>
           <div class="table-wrap"><table>
             <thead><tr><th><span class="i-en">Date</span><span class="i-es">Fecha</span></th><th>Ref.</th><th style="text-align:right"><span class="i-en">Amount</span><span class="i-es">Monto</span></th><th><span class="i-en">Course</span><span class="i-es">Curso</span></th><th><span class="i-en">Participant</span><span class="i-es">Alumno</span></th><th><span class="i-en">Invoice</span><span class="i-es">Factura</span></th></tr></thead>
@@ -607,6 +614,7 @@
           <tbody>
             <tr><td>Same transfer used twice</td><td>Once assigned, a transfer disappears from the list. The server checks again before saving.</td></tr>
             <tr><td>Wrong amount</td><td>The amount can’t be larger than the bank transfer, and the participant’s profile shows what is still pending.</td></tr>
+            <tr><td>Pending balance wrong (subtracted wrong, forgotten or twice)</td><td>The system subtracts each payment itself and shows the new balance before saving. If the balance cell holds a formula or something unclear, it doesn’t touch it and warns.</td></tr>
             <tr><td>Payment never invoiced</td><td>Every payment lands in “Invoices to issue”, sorted by date, until its number is entered.</td></tr>
             <tr><td>Invoice to the wrong name or tax ID</td><td>Invoicing details come from the enrollment form, not retyped.</td></tr>
             <tr><td>Two people saving at once</td><td>A lock lets one save at a time. If the installment changed meanwhile, it warns instead of overwriting.</td></tr>
@@ -620,6 +628,7 @@
           <tbody>
             <tr><td>La misma transferencia usada dos veces</td><td>Una vez asignada, la transferencia desaparece de la lista. El servidor vuelve a controlar antes de guardar.</td></tr>
             <tr><td>Monto equivocado</td><td>El monto no puede superar la transferencia, y la ficha del alumno muestra lo que falta pagar.</td></tr>
+            <tr><td>Saldo pendiente mal calculado (mal restado, olvidado o restado dos veces)</td><td>El sistema resta cada pago solo y muestra el saldo nuevo antes de guardar. Si la celda del saldo tiene una fórmula o algo que no entiende, no la toca y avisa.</td></tr>
             <tr><td>Pago que nunca se factura</td><td>Cada pago entra en “Facturas por hacer”, ordenado por fecha, hasta que se carga su número.</td></tr>
             <tr><td>Factura a nombre o RUC equivocado</td><td>Los datos de facturación salen del formulario de inscripción, no se vuelven a tipear.</td></tr>
             <tr><td>Dos personas guardando a la vez</td><td>Un candado deja guardar de a uno. Si la cuota cambió mientras tanto, avisa en vez de pisar el dato.</td></tr>
@@ -648,11 +657,49 @@
         <div><p class="n">~10</p><p>edge cases fixed in two review rounds</p></div>
         <div><p class="n">0</p><p>real spreadsheets touched while testing</p></div>
       </div>
+      <div class="grid2 i-en" style="margin-top:40px">
+        <div class="tile">
+          <h3>A separate test system</h3>
+          <ul class="list">
+            <li>The system is in daily use and writes to the real course and bank sheets, so risky changes are tried first on a <strong>second copy of the whole system</strong> that only points to copies of the sheets.</li>
+            <li>A sync script copies the real code, swaps every sheet reference for its copy and, <strong>before uploading, checks that no real reference is left</strong>. If one is, it stops.</li>
+            <li>The test screen has a red “TEST SYSTEM” banner, so nobody mistakes it for the real one.</li>
+          </ul>
+        </div>
+        <div class="tile">
+          <h3>How a change reaches the real system</h3>
+          <ul class="list">
+            <li>A separate branch in git.</li>
+            <li>Tried in the test system, including the special cases.</li>
+            <li>Approved by the user.</li>
+            <li>Only then copied to the real system and published.</li>
+          </ul>
+        </div>
+      </div>
       <div class="nums center i-es">
         <div><p class="n">26/26</p><p>pruebas automáticas aprobadas, corriendo el código real sobre copias</p></div>
         <div><p class="n">2</p><p>errores reales encontrados por las pruebas y corregidos antes de lanzar</p></div>
         <div><p class="n">~10</p><p>casos límite corregidos en dos rondas de revisión</p></div>
         <div><p class="n">0</p><p>planillas reales tocadas durante las pruebas</p></div>
+      </div>
+      <div class="grid2 i-es" style="margin-top:40px">
+        <div class="tile">
+          <h3>Un sistema de prueba aparte</h3>
+          <ul class="list">
+            <li>El sistema se usa todos los días y escribe en las planillas reales de los cursos y del banco, así que los cambios delicados se prueban primero en una <strong>segunda copia de todo el sistema</strong>, que apunta solo a copias de las planillas.</li>
+            <li>Un script de sincronización copia el código real, cambia cada referencia a una planilla por su copia y, <strong>antes de subir, verifica que no haya quedado ninguna referencia real</strong>. Si queda una, frena.</li>
+            <li>La pantalla de prueba tiene una franja roja “SISTEMA DE PRUEBA”, para que nadie la confunda con la real.</li>
+          </ul>
+        </div>
+        <div class="tile">
+          <h3>Cómo llega un cambio al sistema real</h3>
+          <ul class="list">
+            <li>Una rama aparte en git.</li>
+            <li>Se prueba en el sistema de prueba, con los casos especiales.</li>
+            <li>La usuaria lo aprueba.</li>
+            <li>Recién ahí se pasa al sistema real y se publica.</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -711,13 +758,14 @@
       <p class="sub">End to end: from mapping the old process with the team to a tool they use every day.</p>
       <ul class="skills">
         <li>Process mapping with users</li>
-        <li>Requirements from a non-technical owner</li>
+        <li>Requirements from non-technical management</li>
         <li>Financial data validation &amp; reconciliation</li>
         <li>KPI analysis in Google Sheets</li>
         <li>User-friendly design</li>
         <li>Google Apps Script / JavaScript</li>
         <li>Google Sheets as a database</li>
         <li>Automated testing</li>
+        <li>Staging environment</li>
         <li>Access control</li>
       </ul>
       <details style="text-align:left">
@@ -725,12 +773,14 @@
         <ul>
           <li>Payment and invoicing KPIs tracked and analyzed in Google Sheets.</li>
           <li>Backend in Google Apps Script (JavaScript V8): about 1,000 lines and 49 functions. Frontend in plain HTML/CSS/JavaScript, no libraries, responsive.</li>
-          <li>Google Sheets is the database, because the team already works there and the owner needed to keep editing by hand.</li>
+          <li>Google Sheets is the database, because the team already works there and management needed to keep editing by hand.</li>
           <li>An installable trigger watches manual edits (invoice number, “done”, amount, date) and keeps the course and bank sheets in sync.</li>
           <li>LockService prevents simultaneous saves. CacheService handles sessions.</li>
           <li>Password per screen (payments, invoices or both), 6-hour sessions, a 15-minute lockout after 5 failed attempts, and every server function checks the session.</li>
           <li>Invoice finder: matches full or partial numbers (e.g. “123” finds 1-1-123), shows the exact match first and up to 30 results, groups every payment under one invoice, and only reads the sheets.</li>
-          <li>Developed locally with clasp and git (28 commits over two weeks).</li>
+          <li>Pending balance: small, testable functions, one that only calculates the new balance and one that reads and writes the cell. It keeps the cell’s format (number stays number, text stays text), replaces a quick typed calculation like “=1100000-380000” with its result, and leaves formulas that use other cells alone. It runs inside the same lock as the payment, and after it: if it fails, the payment is still saved and the user is told to fix the balance by hand. Every case was covered by automated tests before release.</li>
+          <li>Staging: a second Apps Script project pointing only to copies of the sheets, a sync script that refuses to upload if any real sheet reference is left, and a setup step that checks each copy’s columns before changing anything.</li>
+          <li>Developed locally with clasp and git.</li>
         </ul>
       </details>
       </div>
@@ -739,13 +789,14 @@
       <p class="sub">De punta a punta: desde mapear el proceso anterior con el equipo hasta una herramienta que usan todos los días.</p>
       <ul class="skills">
         <li>Mapeo de procesos con usuarios</li>
-        <li>Requisitos de una dueña no técnica</li>
+        <li>Requisitos de una gerencia no técnica</li>
         <li>Validación y conciliación de datos financieros</li>
         <li>Análisis de KPIs en Google Sheets</li>
         <li>Diseño fácil de usar</li>
         <li>Google Apps Script / JavaScript</li>
         <li>Google Sheets como base de datos</li>
         <li>Pruebas automáticas</li>
+        <li>Entorno de prueba (staging)</li>
         <li>Control de acceso</li>
       </ul>
       <details style="text-align:left">
@@ -753,12 +804,14 @@
         <ul>
           <li>KPIs de pagos y facturación seguidos y analizados en Google Sheets.</li>
           <li>Backend en Google Apps Script (JavaScript V8): unas 1.000 líneas y 49 funciones. Frontend en HTML/CSS/JavaScript puro, sin librerías, adaptable a celular.</li>
-          <li>Google Sheets es la base de datos, porque el equipo ya trabaja ahí y la dueña necesitaba seguir editando a mano.</li>
+          <li>Google Sheets es la base de datos, porque el equipo ya trabaja ahí y la gerencia necesitaba seguir editando a mano.</li>
           <li>Un activador instalable detecta los cambios a mano (n° de factura, “hecho”, monto, fecha) y mantiene sincronizadas las planillas del curso y del banco.</li>
           <li>LockService evita que dos personas guarden a la vez. CacheService maneja las sesiones.</li>
           <li>Contraseña por pantalla (pagos, facturas o ambas), sesiones de 6 horas, bloqueo de 15 minutos tras 5 intentos fallidos, y cada función del servidor verifica la sesión.</li>
           <li>Buscador de facturas: encuentra números completos o parciales (ej. “123” encuentra 1-1-123), muestra primero la coincidencia exacta y hasta 30 resultados, agrupa todos los pagos de una misma factura y solo lee las planillas.</li>
-          <li>Desarrollado en local con clasp y git (28 commits en dos semanas).</li>
+          <li>Saldo pendiente: funciones chicas y testeables, una que solo calcula el saldo nuevo y otra que lee y escribe la celda. Respeta el formato de la celda (si era número queda número, si era texto queda texto), reemplaza una cuenta rápida escrita a mano como “=1100000-380000” por su resultado, y no toca las fórmulas que usan otras celdas. Corre dentro del mismo bloqueo que el pago, y después de él: si falla, el pago queda guardado igual y se avisa para corregir el saldo a mano. Cada caso se cubrió con pruebas automáticas antes de subirlo.</li>
+          <li>Staging: un segundo proyecto de Apps Script que apunta solo a copias de las planillas, un script de sincronización que no sube nada si queda una referencia real, y un paso de preparación que revisa las columnas de cada copia antes de cambiar nada.</li>
+          <li>Desarrollado en local con clasp y git.</li>
         </ul>
       </details>
       </div>
@@ -809,13 +862,13 @@
   // bill = invoicing details from the enrollment form (usually the participant, sometimes their law firm)
   var START = {
     students: [
-      { p: "XL", no: 1, t: "new", name: "Ana Torres", id: "4.218.390", bill: ["Ana Torres", "4218390-5"], inst: [{ inv: "001-001-0000118", ref: "TRF-5498", date: "2026-09-22", amt: 300000 }, { pend: "TRF-5512" }, null] },
-      { p: "XL", no: 2, t: "new", name: "Bruno Medina", id: "5.067.112", bill: ["Bruno Medina", "5067112-8"], inst: [{ inv: "001-001-0000119", ref: "CASH-0", date: "2026-09-23", amt: 300000 }, null, null] },
-      { p: "XL", no: 3, t: "new", name: "Camila Rojas", id: "3.991.457", bill: ["Camila Rojas", "3991457-2"], inst: [null, null, null] },
-      { p: "XL", no: 4, t: "ret", name: "Daniel Vera", id: "4.730.268", bill: ["Daniel Vera", "4730268-0"], inst: [{ inv: "001-001-0000120", ref: "TRF-5470", date: "2026-09-18", amt: 250000 }, { inv: "001-001-0000120", ref: "TRF-5470", date: "2026-09-18", amt: 250000 }, null] },
-      { p: "PB", no: 1, t: "new", name: "Elena Duarte", id: "5.302.845", bill: ["Elena Duarte", "5302845-1"], inst: [{ inv: "001-001-0000121", ref: "TRF-5476", date: "2026-09-19", amt: 450000 }, null] },
-      { p: "PB", no: 2, t: "ret", name: "Federico Sosa", id: "4.115.903", bill: ["Sosa & Partners Law Firm", "80045612-3"], inst: [null, null] },
-      { p: "PB", no: 3, t: "new", name: "Gabriela Núñez", id: "3.874.226", bill: ["Gabriela Núñez", "3874226-6"], inst: [{ pend: "TRF-5520" }, null] }
+      { p: "XL", no: 1, t: "new", name: "Ana Torres", id: "4.218.390", bill: ["Ana Torres", "4218390-5"], due: 300000, inst: [{ inv: "001-001-0000118", ref: "TRF-5498", date: "2026-09-22", amt: 300000 }, { pend: "TRF-5512" }, null] },
+      { p: "XL", no: 2, t: "new", name: "Bruno Medina", id: "5.067.112", bill: ["Bruno Medina", "5067112-8"], due: 600000, inst: [{ inv: "001-001-0000119", ref: "CASH-0", date: "2026-09-23", amt: 300000 }, null, null] },
+      { p: "XL", no: 3, t: "new", name: "Camila Rojas", id: "3.991.457", bill: ["Camila Rojas", "3991457-2"], due: 900000, inst: [null, null, null] },
+      { p: "XL", no: 4, t: "ret", name: "Daniel Vera", id: "4.730.268", bill: ["Daniel Vera", "4730268-0"], due: 230000, inst: [{ inv: "001-001-0000120", ref: "TRF-5470", date: "2026-09-18", amt: 250000 }, { inv: "001-001-0000120", ref: "TRF-5470", date: "2026-09-18", amt: 250000 }, null] },
+      { p: "PB", no: 1, t: "new", name: "Elena Duarte", id: "5.302.845", bill: ["Elena Duarte", "5302845-1"], due: 450000, inst: [{ inv: "001-001-0000121", ref: "TRF-5476", date: "2026-09-19", amt: 450000 }, null] },
+      { p: "PB", no: 2, t: "ret", name: "Federico Sosa", id: "4.115.903", bill: ["Sosa & Partners Law Firm", "80045612-3"], due: null, inst: [null, null] },
+      { p: "PB", no: 3, t: "new", name: "Gabriela Núñez", id: "3.874.226", bill: ["Gabriela Núñez", "3874226-6"], due: 450000, inst: [{ pend: "TRF-5520" }, null] }
     ],
     bank: [
       { date: "2026-09-22", ref: "TRF-5498", amt: 300000, who: "TORRES ANA", p: "XL", s: 0, inv: "001-001-0000118" },
@@ -940,13 +993,52 @@
     var s = st.students[+fStu.value], open = s.inst.some(function (c) { return !c; });
     fAmt.value = open ? money(priceOf(s)) : "";
     $("save").disabled = !open;
+    showPreview();
   }
   function showProfile() {
     var s = st.students[+fStu.value], pr = PROGRAMS[s.p], price = priceOf(s);
     var pending = s.inst.filter(function (c) { return !c; }).length;
+    var bal = s.due === null ? '<span class="before">' + T("pending balance not entered yet", "saldo pendiente sin cargar") + "</span>"
+      : s.due > 0 ? '<span class="before">' + T("pending balance Gs ", "saldo pendiente Gs ") + money(s.due) + "</span>"
+      : '<span class="after">' + dueText(s) + "</span>";
     $("profile").innerHTML = "<strong>" + esc(s.name) + "</strong> · " + T("ID ", "CI ") + s.id + " · " + T(TYPE[s.t][0] + " price: ", "Precio " + TYPE[s.t][1].toLowerCase() + ": ") + pr.n + " × " + money(price) +
-      " · " + (pending ? "<span class=\"before\">" + T(pending + " still to pay (", pending + " por pagar (") + money(pending * price) + ")</span>" : '<span class="after">' + T("fully paid", "todo pagado") + "</span>") +
+      " · " + T(pending + " installment" + (pending === 1 ? "" : "s") + " open", pending + (pending === 1 ? " cuota abierta" : " cuotas abiertas")) + " · " + bal +
       " · " + T("Invoice to: ", "Facturar a: ") + esc(s.bill[0]);
+  }
+
+  // ---------- Pending balance ----------
+  // Pure: what the balance becomes after a payment (doesn't touch the sheet)
+  function newPending(due, amt) {
+    if (due === null) return { skip: true };                    // not entered yet: note the payment instead
+    if (due <= 0) return { skip: true, done: true };            // already "Cancelled": leave it
+    var left = due - amt;
+    return left > 0 ? { due: left } : { due: 0, credit: -left };
+  }
+  function dueText(s) {
+    if (s.due === null) return "";
+    if (s.due > 0) return money(s.due);
+    return T("Cancelled", "Cancelado") + (s.credit ? T(" (credit Gs ", " (saldo a favor Gs ") + money(s.credit) + ")" : "");
+  }
+  function showPreview() {
+    var s = st.students[+fStu.value], amt = parseInt(String(fAmt.value).replace(/\D/g, ""), 10) || 0, el = $("f-prev");
+    el.className = "preview";
+    if (!amt || !s.inst.some(function (c) { return !c; })) { el.innerHTML = ""; return; }
+    var r = newPending(s.due, amt);
+    if (r.skip && !r.done) { el.className = "preview warn"; el.innerHTML = T("Pending: <strong>not entered yet</strong>, the payment will be noted", "Pendiente: <strong>sin cargar</strong>, el pago queda anotado"); return; }
+    if (r.skip) { el.innerHTML = T("Pending: <strong>already cancelled</strong>", "Pendiente: <strong>ya cancelado</strong>"); return; }
+    if (r.credit) el.className = "preview warn";
+    el.innerHTML = T("Pending: ", "Pendiente: ") + money(s.due) + " → <strong>" + (r.due ? money(r.due) : T("Cancelled", "Cancelado") + (r.credit ? T(" (credit ", " (a favor ") + money(r.credit) + ")" : "")) + "</strong>";
+  }
+  // Runs after the payment is saved; never blocks it
+  function applyPending(s, amt, k, date) {
+    var r = newPending(s.due, amt);
+    if (r.skip && !r.done) {
+      s.dueNote = (s.dueNote || []).concat(fmt(date) + T(" – inst. ", " – cuota ") + (k + 1) + " – " + money(amt));
+      return T(" Pending balance not entered yet: the payment was noted on that cell, to subtract it later.", " El saldo pendiente no está cargado: el pago quedó anotado en esa celda, para restarlo después.");
+    }
+    if (r.skip) return T(" The pending balance already said “Cancelled”, so it wasn’t touched. Check it.", " El saldo ya decía “Cancelado”, así que no se tocó. Revisalo.");
+    s.due = r.due; s.credit = r.credit || 0;
+    return r.credit ? T(" The participant paid Gs " + money(r.credit) + " more than they owed: balance marked “Cancelled” with a credit.", " El alumno pagó Gs " + money(r.credit) + " de más: saldo marcado “Cancelado” con saldo a favor.") : "";
   }
 
   function save() {
@@ -965,7 +1057,8 @@
     }
     var ref = transfer ? st.bank[bi].ref : (type === "cash" ? "CASH-" : "OTHER-") + (++seq);
     s.inst[k] = { pend: ref };
-    flashKeys = {}; flashKeys["c" + si + "-" + k] = 1;
+    flashKeys = {}; flashKeys["c" + si + "-" + k] = 1; flashKeys["d" + si] = 1;
+    var extra = applyPending(s, amt, k, transfer ? st.bank[bi].date : today());
     if (transfer) { var b = st.bank[bi]; b.p = s.p; b.s = si; flashKeys["b" + bi] = 1; }
     st.queue.push({ s: si, k: k, ref: ref, date: transfer ? st.bank[bi].date : today(), amt: amt, note: type === "other" ? note : "" });
     flashKeys["q" + ref] = 1;
@@ -974,6 +1067,8 @@
     msg.textContent = transfer ? T("Saved. Course sheet, bank sheet and invoice queue updated at once.", "Guardado. Planilla del curso, banco y cola de facturas actualizados a la vez.")
       : type === "cash" ? T("Saved. Course sheet and invoice queue updated (cash isn’t in the bank).", "Guardado. Planilla del curso y cola de facturas actualizadas (el efectivo no figura en el banco).")
       : T("Saved. Course sheet and invoice queue updated. The comment travels with the payment to the invoice queue.", "Guardado. Planilla del curso y cola de facturas actualizadas. El comentario viaja con el pago hasta la cola de facturas.");
+    msg.textContent += extra;
+    if (extra) msg.className = "msg warn";
     fRef.value = "";
     fillInst();
     renderAll();
@@ -986,16 +1081,26 @@
     return '<span class="chip inv">' + c.inv + "</span>";
   }
   function fl(key) { return flashKeys[key] ? ' class="flash"' : ""; }
+  function dueCell(s, i) {
+    var cls = "num due" + (flashKeys["d" + i] ? " flash" : ""), note = "";
+    if (s.dueNote && s.dueNote.length) {
+      var t = T("Payments not yet subtracted: ", "Pagos todavía no descontados: ") + s.dueNote.join("; ");
+      note = '<span class="note-corner" title="' + esc(t) + '"></span>';
+    }
+    var v = s.due === null ? '<span class="empty">—</span>' : s.due > 0 ? money(s.due) : '<span class="chip inv">' + T("Cancelled", "Cancelado") + "</span>" +
+      (s.credit ? '<br><span class="muted" style="font-size:12px">' + T("credit ", "a favor ") + money(s.credit) + "</span>" : "");
+    return '<td class="' + cls + '">' + v + note + "</td>";
+  }
 
   function renderProgram() {
     var p = fProg.value, pr = PROGRAMS[p], h = "<tr><th>" + T("No.", "N°") + "</th><th>" + T("Participant", "Alumno") + "</th><th>" + T("ID", "CI") + "</th><th>" + T("Type", "Tipo") + "</th>";
     for (var k = 0; k < pr.n; k++) h += "<th>" + T("Inst. ", "Cuota ") + (k + 1) + "</th>";
-    $("prog-head").innerHTML = h + "</tr>";
+    $("prog-head").innerHTML = h + '<th class="num">' + T("Pending (Gs)", "Pendiente (Gs)") + "</th></tr>";
     $("prog-name").textContent = L(pr.name);
     $("prog-body").innerHTML = st.students.map(function (s, i) {
       if (s.p !== p) return "";
       return "<tr><td>" + s.no + "</td><td>" + esc(s.name) + "</td><td>" + s.id + "</td><td>" + (s.t === "ret" ? T("Returning", "Vuelve") : T("New", "Nuevo")) + "</td>" +
-        s.inst.map(function (c, k) { return "<td" + fl("c" + i + "-" + k) + ">" + cell(c) + "</td>"; }).join("") + "</tr>";
+        s.inst.map(function (c, k) { return "<td" + fl("c" + i + "-" + k) + ">" + cell(c) + "</td>"; }).join("") + dueCell(s, i) + "</tr>";
     }).join("");
   }
   function renderBank() {
@@ -1115,7 +1220,9 @@
   fRef.addEventListener("change", function () {
     var b = st.bank[+fRef.value];
     if (b) fAmt.value = money(Math.min(b.amt, priceOf(st.students[+fStu.value])));
+    showPreview();
   });
+  fAmt.addEventListener("input", showPreview);
   $("save").addEventListener("click", save);
   $("reset").addEventListener("click", function () { $("inv-q").value = ""; reset(); });
   $("inv-q").addEventListener("input", renderFinder);
